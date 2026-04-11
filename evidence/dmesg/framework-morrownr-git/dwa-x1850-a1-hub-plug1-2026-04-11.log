@@ -1,0 +1,45 @@
+=== A1 (2001:3321, RTL8852AU-family) on Framework, hub topology, morrownr/rtw89_git, 2026-04-11 ===
+Driver: rtw89_8852au_git
+Configuration: B (morrownr _git variants via DKMS, blacklist active)
+
+Apr 11 09:47:23 fedora kernel: usb 3-1.3: new high-speed USB device number 8 using xhci_hcd
+Apr 11 09:47:23 fedora kernel: usb 3-1.3: New USB device found, idVendor=0bda, idProduct=1a2b, bcdDevice= 0.00
+Apr 11 09:47:23 fedora kernel: usb 3-1.3: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+Apr 11 09:47:23 fedora kernel: usb 3-1.3: Product: DISK
+Apr 11 09:47:23 fedora kernel: usb 3-1.3: Manufacturer: Realtek
+Apr 11 09:47:23 fedora kernel: usb-storage 3-1.3:1.0: USB Mass Storage device detected
+Apr 11 09:47:23 fedora kernel: usb-storage 3-1.3:1.0: device ignored
+Apr 11 09:47:23 fedora kernel: usbcore: registered new interface driver usb-storage
+Apr 11 09:47:23 fedora kernel: usbcore: registered new interface driver uas
+Apr 11 09:47:24 fedora kernel: usb 3-1.3: USB disconnect, device number 8
+Apr 11 09:47:26 fedora kernel: usb 3-1.3: new high-speed USB device number 9 using xhci_hcd
+Apr 11 09:47:26 fedora kernel: usb 3-1.3: New USB device found, idVendor=2001, idProduct=3321, bcdDevice= 0.00
+Apr 11 09:47:26 fedora kernel: usb 3-1.3: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+Apr 11 09:47:26 fedora kernel: usb 3-1.3: Product: 802.11ac WLAN Adapter
+Apr 11 09:47:26 fedora kernel: usb 3-1.3: Manufacturer: Realtek
+Apr 11 09:47:26 fedora kernel: usb 3-1.3: SerialNumber: 00e04c000001
+Apr 11 09:47:26 fedora kernel: rtw89_8852au_git 3-1.3:1.0: loaded firmware rtw89/rtw8852a_fw-1.bin
+Apr 11 09:47:26 fedora kernel: rtw89_8852au_git 3-1.3:1.0: usb write32 0xc4 fail ret=-71 value=0xb0f10 attempt=0
+Apr 11 09:47:26 fedora kernel: rtw89_8852au_git 3-1.3:1.0: usb write32 0xc4 fail ret=-71 value=0xb0f10 attempt=1
+Apr 11 09:47:26 fedora kernel: rtw89_8852au_git 3-1.3:1.0: usb write32 0xc4 fail ret=-71 value=0xb0f10 attempt=2
+Apr 11 09:47:26 fedora kernel: rtw89_8852au_git 3-1.3:1.0: usb write32 0xc4 fail ret=-71 value=0xb0f10 attempt=3
+Apr 11 09:47:26 fedora kernel: rtw89_8852au_git 3-1.3:1.0: usb write32 0xc4 fail ret=-71 value=0xb0f10 attempt=4
+Apr 11 09:47:26 fedora kernel: usb 3-1.3: USB disconnect, device number 9
+Apr 11 09:47:32 fedora kernel: usb 2-1.3: new SuperSpeed USB device number 7 using xhci_hcd
+Apr 11 09:47:32 fedora kernel: usb 2-1.3: New USB device found, idVendor=2001, idProduct=3321, bcdDevice= 0.00
+Apr 11 09:47:32 fedora kernel: usb 2-1.3: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+Apr 11 09:47:32 fedora kernel: usb 2-1.3: Product: 802.11ax WLAN Adapter
+Apr 11 09:47:32 fedora kernel: usb 2-1.3: Manufacturer: Realtek
+Apr 11 09:47:32 fedora kernel: usb 2-1.3: SerialNumber: 00e04c000001
+Apr 11 09:47:32 fedora kernel: rtw89_8852au_git 2-1.3:1.0: loaded firmware rtw89/rtw8852a_fw-1.bin
+Apr 11 09:47:32 fedora kernel: rtw89_8852au_git 2-1.3:1.0: git commit 2c2d99d18a660a9c1506844bb822a4edf900accf
+Apr 11 09:47:32 fedora kernel: rtw89_8852au_git 2-1.3:1.0: Firmware version 0.13.36.2 (52acc807), cmd version 0, type 1
+Apr 11 09:47:32 fedora kernel: rtw89_8852au_git 2-1.3:1.0: Firmware version 0.13.36.2 (52acc807), cmd version 0, type 3
+Apr 11 09:47:32 fedora kernel: rtw89_8852au_git 2-1.3:1.0: Firmware element BB version: 00 16 00 00
+Apr 11 09:47:32 fedora kernel: rtw89_8852au_git 2-1.3:1.0: Firmware element radio A version: 00 38 00 00
+Apr 11 09:47:32 fedora kernel: rtw89_8852au_git 2-1.3:1.0: Firmware element NCTL version: 00 0d 00 00
+Apr 11 09:47:32 fedora kernel: rtw89_8852au_git 2-1.3:1.0: Firmware element TXPWR version: 00 37 00 00
+Apr 11 09:47:32 fedora kernel: rtw89_8852au_git 2-1.3:1.0: chip info CID: 0, CV: 2, AID: 0, ACV: 0, RFE: 1
+Apr 11 09:47:32 fedora kernel: ACPI: \: failed to evaluate _DSM e8c3a8d2-694b-004f-82bd-fe8607803aa7 rev:0 func:10 (0x1001)
+Apr 11 09:47:32 fedora kernel: rtw89_8852au_git 2-1.3:1.0: rfkill hardware state changed to enable
+Apr 11 09:47:32 fedora kernel: rtw89_8852au_git 2-1.3:1.0 wlp0s13f0u1u3: renamed from wlan0
