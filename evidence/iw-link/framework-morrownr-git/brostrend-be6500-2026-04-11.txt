@@ -1,0 +1,48 @@
+Connected to 00:00:00:00:00:A1 (on wlp0s13f0u1u4u4)
+	SSID: 8 Hertz WAN IP
+	Link 2 BSSID 00:00:00:00:00:A3
+		freq: 2412.0
+	Link 1 BSSID 00:00:00:00:00:A2
+		freq: 5500.0
+	Link 0 BSSID 00:00:00:00:00:A1
+		freq: 5975.0
+MLD 00:00:00:00:00:A1 stats:
+	RX: 1589190678 bytes (177161 packets)
+	TX: 2171744403 bytes (876597 packets)
+	signal: 0 dBm
+	rx bitrate: 2041.2 MBit/s 160MHz EHT-MCS 10 EHT-NSS 2 EHT-GI 1
+	tx bitrate: 2593.5 MBit/s 160MHz EHT-MCS 12 EHT-NSS 2 EHT-GI 0
+	bss flags: 
+	dtim period: 1
+	beacon int: 100
+
+Station 00:00:00:00:00:A1 (on wlp0s13f0u1u4u4)
+	authorized:	yes
+	authenticated:	yes
+	associated:	yes
+	preamble:	long
+	WMM/WME:	yes
+	MFP:		yes
+	TDLS peer:	no
+	inactive time:	5398 ms
+	rx bytes:	1589190678
+	rx packets:	177161
+	tx bytes:	6466711699
+	tx packets:	876597
+	tx retries:	0
+	tx failed:	0
+	beacon loss:	0
+	rx drop misc:	67
+	signal:  	0 dBm
+	signal avg:	0 dBm
+	tx bitrate:	2593.5 MBit/s 160MHz EHT-MCS 12 EHT-NSS 2 EHT-GI 0
+	tx duration:	0 us
+	rx bitrate:	2041.2 MBit/s 160MHz EHT-MCS 10 EHT-NSS 2 EHT-GI 1
+	rx duration:	0 us
+	DTIM period:	1
+	beacon interval:100
+	connected time:	216 seconds
+	associated at [boottime]:	9412.752s
+	associated at:	1775930381150 ms
+	current time:	1775930597360 ms
+

@@ -1,0 +1,53 @@
+=== iperf3 DOWNLINK (server->client, -R) 30s, BrosTrend BE6500, Framework, 2026-04-11 ===
+Command: iperf3 -c 192.168.1.70 -B 192.168.1.98 -t 30 -i 5 -R
+Route: 192.168.1.70/32 pinned via wlp0s13f0u1u4u4 src 192.168.1.98
+Driver: rtw89_8922au_git (morrownr _git)
+
+Connecting to host 192.168.1.70, port 5201
+Reverse mode, remote host 192.168.1.70 is sending
+[  5] local 192.168.1.98 port 54937 connected to 192.168.1.70 port 5201
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-5.00   sec   237 MBytes   398 Mbits/sec
+[  5]   5.00-10.00  sec   200 MBytes   335 Mbits/sec
+[  5]  10.00-15.00  sec   202 MBytes   339 Mbits/sec
+[  5]  15.00-20.00  sec   296 MBytes   496 Mbits/sec
+[  5]  20.00-25.00  sec   188 MBytes   315 Mbits/sec
+[  5]  25.00-30.00  sec   295 MBytes   495 Mbits/sec
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-30.01  sec  1.39 GBytes   398 Mbits/sec                  sender
+[  5]   0.00-30.00  sec  1.38 GBytes   396 Mbits/sec                  receiver
+
+iperf Done.
+
+=== byte-counter delta DOWNLINK ===
+rx delta: 1558087905 bytes = 1.56 GB over 30 seconds
+Wire rate: approximately 415 Mbit/s (matches iperf3 receiver 396 Mbit/s plus overhead)
+
+=== Anomaly ===
+The downlink is substantially lower than the uplink (398 Mbit/s vs 1.63 Gbit/s),
+and also lower than the Alfa control run's downlink (651 Mbit/s) on the same
+host and same iperf3 server. The five-second samples are jittery
+(315 / 335 / 339 / 398 / 495 / 496 Mbit/s) rather than clean-bottlenecked.
+Possible causes worth investigating in a follow-up:
+  1. MLO link-scheduling asymmetry: the driver may be favoring the uplink path
+     for the 160 MHz links and routing downlink traffic over 2.4 GHz or a slower
+     link in the MLO bundle, dragging down aggregate throughput.
+  2. Rate-control instability: post-run iw link shows EHT-MCS dropped from
+     13 to 12 (tx) and 12 to 10 (rx) during the soak, suggesting the adapter
+     or AP saw enough errors to back off the modulation.
+  3. Windows iperf3 server sender bottleneck: the Windows side may not push
+     packets as fast as the Linux client can receive them, though uplink
+     confirmed the server can receive 1.63 Gbit/s so its NIC is at least
+     2.5 GbE capable.
+  4. Firmware receive-path issue in the morrownr 8922au driver specifically.
+     The "failed to wait RF DACK" and "failed to wait RF TSSI" warnings
+     captured at probe time indicate the RF calibration is not fully clean,
+     which could affect receive sensitivity or aggregation.
+
+=== Post-run link state ===
+tx bitrate: 2593.5 MBit/s 160MHz EHT-MCS 12 EHT-NSS 2 EHT-GI 0 (was 2882.3)
+rx bitrate: 2041.2 MBit/s 160MHz EHT-MCS 10 EHT-NSS 2 EHT-GI 1 (was 2449.5)
+tx retries: 0, tx failed: 0 (as reported by iw station dump; does not count
+  all retry types)
+MLO still intact, all three links present.

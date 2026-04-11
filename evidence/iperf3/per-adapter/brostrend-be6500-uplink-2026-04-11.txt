@@ -1,0 +1,41 @@
+=== iperf3 UPLINK (client->server) 30s, BrosTrend BE6500, Framework, 2026-04-11 ===
+Command: iperf3 -c 192.168.1.70 -B 192.168.1.98 -t 30 -i 5
+Route: 192.168.1.70/32 pinned via wlp0s13f0u1u4u4 src 192.168.1.98
+Driver: rtw89_8922au_git (morrownr _git)
+Configuration: B (morrownr _git via DKMS). Loaded via explicit modprobe since
+   rtw89_8922au_git was in the rtw89-config-a.conf blacklist at plug time but
+   blacklist only blocks auto-load, not explicit modprobe.
+USB state at plug: rtw89_8922au_git module was loaded explicitly, which
+   triggered a re-probe on the BE6500 that had been stuck at USB 2.0
+   high-speed on path 3-1.4.4 because no driver was available. Re-probe
+   ran Bitterblue's switch-mode code path (rtw89_usb_switch_mode_be,
+   5 EPROTO retries to register 0xc4 value 0x90130f00) and the adapter
+   re-enumerated on path 2-1.4.4 at SuperSpeed 5000 Mbit/s.
+Link state: Wi-Fi 7 MLO active, three links at 2.4/5/6 GHz:
+   - Link 0: 6 GHz (5975 MHz) BSSID 00:00:00:00:00:A1
+   - Link 1: 5 GHz (5500 MHz) BSSID 00:00:00:00:00:A2
+   - Link 2: 2.4 GHz (2412 MHz) BSSID 00:00:00:00:00:A3
+   MLD BSSID: 00:00:00:00:00:A1
+   Pre-run tx bitrate: 2882.3 MBit/s 160MHz EHT-MCS 13 EHT-NSS 2 EHT-GI 0
+   Pre-run rx bitrate: 2449.5 MBit/s 160MHz EHT-MCS 12 EHT-NSS 2 EHT-GI 1
+
+Connecting to host 192.168.1.70, port 5201
+[  5] local 192.168.1.98 port 55259 connected to 192.168.1.70 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-5.00   sec   950 MBytes  1.59 Gbits/sec    0   4.02 MBytes
+[  5]   5.00-10.00  sec   987 MBytes  1.66 Gbits/sec    0   4.02 MBytes
+[  5]  10.00-15.00  sec   977 MBytes  1.64 Gbits/sec    0   4.02 MBytes
+[  5]  15.00-20.00  sec   979 MBytes  1.64 Gbits/sec    0   4.02 MBytes
+[  5]  20.00-25.00  sec   970 MBytes  1.63 Gbits/sec    0   4.02 MBytes
+[  5]  25.00-30.00  sec   975 MBytes  1.64 Gbits/sec    0   4.02 MBytes
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-30.00  sec  5.70 GBytes  1.63 Gbits/sec    0            sender
+[  5]   0.00-30.01  sec  5.70 GBytes  1.63 Gbits/sec                  receiver
+
+iperf Done.
+
+=== byte-counter delta UPLINK ===
+tx delta: 6462968750 bytes = 6.46 GB over 30 seconds
+Wire rate: approximately 1.72 Gbit/s (iperf3 sender 1.63 Gbit/s plus L2/L3 overhead)
+Zero retransmits across all 30 seconds. Fully saturated sender path.
