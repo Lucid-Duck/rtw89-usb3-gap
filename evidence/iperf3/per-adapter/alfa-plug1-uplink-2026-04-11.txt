@@ -1,0 +1,24 @@
+=== iperf3 UPLINK (client->server) 30s, Alfa AWUS036AXML, Framework, 2026-04-11 ===
+Command: iperf3 -c 192.168.1.70 -B 192.168.1.241 -t 30 -i 5
+Route: 192.168.1.70/32 pinned via wlp0s13f0u2i3 src 192.168.1.241
+
+Connecting to host 192.168.1.70, port 5201
+[  5] local 192.168.1.241 port 34325 connected to 192.168.1.70 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-5.00   sec   434 MBytes   728 Mbits/sec    0   1.73 MBytes
+[  5]   5.00-10.00  sec   442 MBytes   741 Mbits/sec    0   2.08 MBytes
+[  5]  10.00-15.00  sec   451 MBytes   756 Mbits/sec    0   2.08 MBytes
+[  5]  15.00-20.00  sec   450 MBytes   755 Mbits/sec    0   2.08 MBytes
+[  5]  20.00-25.00  sec   450 MBytes   754 Mbits/sec    0   2.08 MBytes
+[  5]  25.00-30.01  sec   449 MBytes   754 Mbits/sec    0   2.08 MBytes
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-30.01  sec  2.61 GBytes   748 Mbits/sec    0            sender
+[  5]   0.00-30.01  sec  2.61 GBytes   747 Mbits/sec                  receiver
+
+iperf Done.
+
+=== byte-counter delta UPLINK ===
+tx delta: 2932967095 bytes (2.93 GB over 30s)
+rx delta: 15272095 bytes (ACKs)
+Approx wire rate from tx counter: 782 Mbit/s (matches iperf3 sender 748 Mbit/s within L2/L3 framing overhead)

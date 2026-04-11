@@ -1,0 +1,76 @@
+=== Alfa AWUS036AXML sysfs state, 2026-04-11, Framework Config-agnostic ===
+
+PATH: /sys/bus/usb/devices/2-2
+idVendor: 0e8d
+idProduct: 7961
+speed: 5000
+busnum: 2
+devnum: 5
+version:  3.20
+product: Wireless_Device
+manufacturer: MediaTek Inc.
+serial: 000000000
+maxchild: 0
+bMaxPower: 160mA
+
+=== lsusb -v slice ===
+Couldn't open device, some information will be missing
+
+Bus 002 Device 005: ID 0e8d:7961 MediaTek Inc. Wireless_Device
+Negotiated speed: SuperSpeed (5Gbps)
+Device Descriptor:
+  bLength                18
+  bDescriptorType         1
+  bcdUSB               3.20
+  bDeviceClass          239 Miscellaneous Device
+  bDeviceSubClass         2 [unknown]
+  bDeviceProtocol         1 Interface Association
+  bMaxPacketSize0         9
+  idVendor           0x0e8d MediaTek Inc.
+  idProduct          0x7961 Wireless_Device
+  bcdDevice            1.00
+  iManufacturer           6 MediaTek Inc.
+  iProduct                7 Wireless_Device
+  iSerial                 8 000000000
+  bNumConfigurations      1
+  Configuration Descriptor:
+    bLength                 9
+    bDescriptorType         2
+    wTotalLength       0x01fa
+    bNumInterfaces          4
+    bConfigurationValue     1
+    iConfiguration          9 
+    bmAttributes         0xa0
+      (Bus Powered)
+      Remote Wakeup
+    MaxPower              160mA
+    Interface Association:
+      bLength                 8
+      bDescriptorType        11
+      bFirstInterface         0
+      bInterfaceCount         3
+      bFunctionClass        224 Wireless
+      bFunctionSubClass       1 Radio Frequency
+      bFunctionProtocol       1 Bluetooth
+      iFunction               5 
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        0
+      bAlternateSetting       0
+      bNumEndpoints           3
+      bInterfaceClass       224 Wireless
+      bInterfaceSubClass      1 Radio Frequency
+      bInterfaceProtocol      1 Bluetooth
+      iInterface              1 
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x81  EP 1 IN
+        bmAttributes            3
+          Transfer Type            Interrupt
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval               1
+        bMaxBurst               0

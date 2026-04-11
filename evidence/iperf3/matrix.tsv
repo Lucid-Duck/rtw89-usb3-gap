@@ -1,0 +1,2 @@
+adapter	vid_pid	chip	host	config	plug	date	usb_speed	bus	band_mhz	chan_width	signal_dbm	phy_tx_mbps	phy_rx_mbps	iperf3_uplink_mbps	iperf3_downlink_mbps	uplink_retr	notes
+alfa-awus036axml	0e8d:7961	mt7921au	framework13	control	1	2026-04-11	5000	2	5975	80	-33	1200.9	907.4	748	651	0	Control run, driver-agnostic vs rtw89, first-plug SuperSpeed no retries

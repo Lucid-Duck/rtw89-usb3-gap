@@ -1,0 +1,25 @@
+=== iperf3 DOWNLINK (server->client, -R) 30s, Alfa AWUS036AXML, Framework, 2026-04-11 ===
+Command: iperf3 -c 192.168.1.70 -B 192.168.1.241 -t 30 -i 5 -R
+Route: 192.168.1.70/32 pinned via wlp0s13f0u2i3 src 192.168.1.241
+
+Connecting to host 192.168.1.70, port 5201
+Reverse mode, remote host 192.168.1.70 is sending
+[  5] local 192.168.1.241 port 36331 connected to 192.168.1.70 port 5201
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-5.01   sec   356 MBytes   597 Mbits/sec
+[  5]   5.01-10.00  sec   398 MBytes   668 Mbits/sec
+[  5]  10.00-15.00  sec   395 MBytes   662 Mbits/sec
+[  5]  15.00-20.00  sec   406 MBytes   682 Mbits/sec
+[  5]  20.00-25.00  sec   406 MBytes   681 Mbits/sec
+[  5]  25.00-30.00  sec   368 MBytes   617 Mbits/sec
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-30.01  sec  2.28 GBytes   651 Mbits/sec                  sender
+[  5]   0.00-30.00  sec  2.27 GBytes   651 Mbits/sec                  receiver
+
+iperf Done.
+
+=== byte-counter delta DOWNLINK ===
+tx delta: 27428491 bytes (ACKs)
+rx delta: 2556139367 bytes (2.55 GB over 30s)
+Approx wire rate from rx counter: 682 Mbit/s (matches iperf3 receiver 651 Mbit/s within L2/L3 framing overhead)

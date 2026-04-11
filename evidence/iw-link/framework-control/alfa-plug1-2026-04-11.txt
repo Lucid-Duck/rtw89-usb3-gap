@@ -1,0 +1,49 @@
+=== iw dev wlp0s13f0u2i3 link, Alfa, 2026-04-11, Framework ===
+
+Connected to 00:00:00:00:00:A1 (on wlp0s13f0u2i3)
+	SSID: 8 Hertz WAN IP
+	freq: 5975.0
+	RX: 2572330357 bytes (1927332 packets)
+	TX: 2960428632 bytes (2351663 packets)
+	signal: -33 dBm
+	rx bitrate: 1020.6 MBit/s 80MHz HE-MCS 10 HE-NSS 2 HE-GI 1 HE-DCM 0
+	tx bitrate: 1200.9 MBit/s 80MHz HE-MCS 11 HE-NSS 2 HE-GI 0 HE-DCM 0
+	bss flags: short-slot-time
+	dtim period: 1
+	beacon int: 100
+
+=== iw dev wlp0s13f0u2i3 station dump ===
+Station 00:00:00:00:00:A1 (on wlp0s13f0u2i3)
+	authorized:	yes
+	authenticated:	yes
+	associated:	yes
+	preamble:	long
+	WMM/WME:	yes
+	MFP:		yes
+	TDLS peer:	no
+	inactive time:	2702 ms
+	rx bytes:	2572330357
+	rx packets:	1927332
+	tx bytes:	2960428632
+	tx packets:	2351663
+	tx retries:	0
+	tx failed:	0
+	beacon loss:	0
+	rx drop misc:	0
+	signal:  	-33 [-40, -34] dBm
+	signal avg:	-33 [-39, -34] dBm
+	tx bitrate:	1200.9 MBit/s 80MHz HE-MCS 11 HE-NSS 2 HE-GI 0 HE-DCM 0
+	tx duration:	27416534 us
+	rx bitrate:	1020.6 MBit/s 80MHz HE-MCS 10 HE-NSS 2 HE-GI 1 HE-DCM 0
+	rx duration:	23820797 us
+	last ack signal:-33 dBm
+	avg ack signal:	-33 dBm
+	airtime weight: 256
+	DTIM period:	1
+	beacon interval:100
+	short slot time:yes
+	connected time:	382 seconds
+	associated at [boottime]:	4177.481s
+	associated at:	1775925145879 ms
+	current time:	1775925528171 ms
+
