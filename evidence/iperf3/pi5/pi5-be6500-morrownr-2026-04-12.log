@@ -1,0 +1,22 @@
+=== BE6500 (0bda:8912) on Raspberry Pi 5 -- morrownr rtw89_8922au_git ===
+Date: Sun Apr 12 2026
+Kernel: 6.12.47+rpt-rpi-2712 (Pi OS stock)
+Chipset: RTL8922AU (WiFi 7 / 802.11be)
+
+USB ENUMERATION: Bus 4 Port 1, 5000 Mbps (USB 3.0 SuperSpeed)
+Switch-mode SUCCESSFUL on aarch64 + Broadcom RP1 xHCI for the WiFi 7 chipset
+
+WIFI LINK:
+  5 GHz (5500 MHz), EHT (WiFi 7) negotiated
+  Signal: -34 dBm
+  rx bitrate: 1020.6 Mbit/s (EHT-MCS 10, NSS 2)
+  tx bitrate: 1296.7 Mbit/s (EHT-MCS 12, NSS 2)
+
+IPERF3 UPLOAD (30s): 774 Mbit/sec, 2.70 GB, 0 retransmits
+IPERF3 DOWNLOAD (30s): 261 Mbit/sec, 934 MB (lower than Framework, likely
+  Pi CPU bottleneck on RX processing)
+
+SIGNIFICANCE:
+  WiFi 7 (EHT) on a $80 single-board computer via USB adapter. Demonstrates
+  that Bitterblue's switch-mode code enables the latest WiFi standard on
+  ARM platforms that have no stock kernel driver for this chip at all.

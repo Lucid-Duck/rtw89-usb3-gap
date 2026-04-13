@@ -1,0 +1,40 @@
+=== BE6500 (0bda:8912) -- SYNTHESIZED "no-switchmode" driver ===
+Date: Sun Apr 12 2026
+Kernel: 6.19.11-200.fc43.x86_64
+Host: Framework 13, Fedora 43
+Chipset: RTL8922AU (WiFi 7 / 802.11be)
+
+Driver state: morrownr/rtw89 HEAD 2c2d99d with commits cd287cc and
+c8a8ac4 reverted (no USB 2->3 switch-mode). Built from
+~/builds/rtw89-nosw/ and insmod'd directly, not DKMS.
+Conflict in reg.h on c8a8ac4 revert resolved manually to keep
+R_BE_SCOREBOARD definition (needed by rtw8922a.c) while dropping
+switch-mode bits.
+
+This simulates what "stock mainline" would look like if the 8922AU
+driver were added WITHOUT Bitterblue's switch-mode work.
+
+USB ENUMERATION:
+  Path: 3-3:1.0 (Bus 3 USB 2.0 root hub)
+  Speed: 480 Mbps (USB 2.0 High-Speed) -- bug reproduced
+  NO switch-mode attempted (code removed)
+  DACK timeout errors in dmesg (louis-kotze's DACK fix also absent)
+
+WIFI LINK:
+  Signal: -38 dBm
+  rx bitrate: 1200.9 Mbit/s (EHT-MCS 11)
+  tx bitrate: 1441.1 Mbit/s (EHT-MCS 13) -- WiFi 7 negotiated
+
+IPERF3 UPLOAD (30s): 260 Mbit/sec, 930 MB, 1 retransmit
+IPERF3 DOWNLOAD (30s): 302 Mbit/sec, 1.06 GB
+
+DELTA vs MORROWNR (same adapter, same port, same AP):
+  Upload: 957 -> 260 = 3.7x degradation without switch-mode
+  Download: 622 -> 302 = 2.1x degradation
+  USB bus: 10000 -> 480 Mbps = 20x drop in link capacity
+
+SIGNIFICANCE:
+  Proves the USB 2->3 switch-mode bug AND fix apply to the RTL8922AU
+  WiFi 7 chipset in addition to the 8852AU and 8852BU WiFi 6 chipsets.
+  The effect is even more dramatic on the 8922AU (3.7x) because WiFi 7
+  radio speeds exceed USB 2.0 capacity by a much larger margin.

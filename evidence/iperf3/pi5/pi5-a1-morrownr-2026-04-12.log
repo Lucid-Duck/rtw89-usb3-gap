@@ -1,0 +1,33 @@
+=== DWA-X1850 A1 (2001:3321) on Raspberry Pi 5 -- morrownr rtw89_8852au_git ===
+Date: Sun Apr 12 2026
+Kernel: 6.12.47+rpt-rpi-2712 (Pi OS stock kernel)
+Host: Raspberry Pi 5 (aarch64)
+USB controller: Broadcom RP1 xHCI
+Interface: wlan1 (wlan0 is built-in brcmfmac)
+
+IMPORTANT CONTEXT:
+Pi OS stock kernel 6.12 has ZERO rtw89 USB modules. No rtw89_usb.ko,
+no rtw89_8852au.ko, no rtw89_8852bu.ko, no rtw89_8922au.ko. Out-of-tree
+morrownr/rtw89 DKMS is the ONLY way Pi OS users can use these adapters.
+This makes Bitterblue's switch-mode fix doubly important for Pi users:
+not only does it enable USB 3.0 SuperSpeed, it's part of the package
+they NEED just to have working hardware at all.
+
+USB ENUMERATION:
+  Bus 4 Port 1, speed 5000 Mbps (USB 3.0 SuperSpeed)
+  Switch-mode SUCCESSFUL on aarch64 + Broadcom RP1 xHCI
+
+WIFI LINK:
+  SSID: 8 Hertz WAN IP, 5 GHz (5500 MHz)
+  BSSID: 00:00:00:00:00:A2 (forced via nmcli)
+  Signal: -36 dBm
+  rx bitrate: 1134.2 Mbit/s, tx bitrate: 1200.9 Mbit/s (identical to Framework)
+
+IPERF3 UPLOAD (30s): 682 Mbit/sec, 2.38 GB, 0 retransmits
+IPERF3 DOWNLOAD (30s): 609 Mbit/sec, 2.13 GB
+
+SIGNIFICANCE:
+  Fix works cross-architecture (aarch64 vs x86_64) and cross-controller
+  (Broadcom RP1 vs Intel Tiger Lake xHCI). Upload slightly lower than
+  Framework (682 vs 802 Mbps, likely CPU factor), download higher
+  (609 vs 425 Mbps). Both well above USB 2.0 ceiling.

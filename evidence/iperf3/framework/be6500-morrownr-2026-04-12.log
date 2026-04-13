@@ -1,0 +1,20 @@
+=== BE6500 (0bda:8912) -- MORROWNR rtw89_8922au_git driver ===
+Date: Sun Apr 12 2026
+Kernel: 6.19.11-200.fc43.x86_64
+Chipset: RTL8922AU (WiFi 7 / 802.11be)
+
+Driver state: morrownr/rtw89 DKMS with Bitterblue's switch-mode and
+louis-kotze's DACK timeout fix applied.
+
+USB ENUMERATION:
+  Path after switch-mode: 2-2:1.0 (moved to USB 3.0 root hub)
+  Speed: 10000 Mbps (USB 3.1 Gen 2, SuperSpeedPlus)
+  Switch-mode SUCCESSFUL on RTL8922AU (WiFi 7)
+
+WIFI LINK:
+  Signal: -37 dBm
+  rx bitrate: 1200.9 Mbit/s (EHT-MCS 11, WiFi 7)
+  tx bitrate: 1441.1 Mbit/s (EHT-MCS 13, WiFi 7)
+
+IPERF3 UPLOAD (30s): 957 Mbit/sec, 3.34 GB, 0 retransmits
+IPERF3 DOWNLOAD (30s): 622 Mbit/sec, 2.17 GB (variable 535-721)

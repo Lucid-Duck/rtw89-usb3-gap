@@ -1,10 +1,10 @@
-# BrosTrend AX4L
+# Brostrend AX1800
 
 ## Identity
 
 | Field | Value |
 |---|---|
-| Marketing name | BrosTrend AX4L |
+| Marketing name | Brostrend AX1800 |
 | VID:PID | `0bda:b832` |
 | Chip | RTL8832BU |
 | Driver binding | `rtw89_8852bu_git` (the `_8852bu` module handles both RTL8852BU and RTL8832BU: same B-series USB family) |

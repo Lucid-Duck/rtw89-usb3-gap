@@ -1,0 +1,9 @@
+=== Brostrend AX1800 (0bda:b832) on Raspberry Pi 5 -- morrownr rtw89_8852bu_git ===
+Date: Sun Apr 12 2026
+Kernel: 6.12.47+rpt-rpi-2712 (Pi OS stock)
+Chipset: RTL8852BU
+
+USB ENUMERATION: Bus 4 Port 1, 5000 Mbps (USB 3.0 SuperSpeed)
+WIFI LINK: 5 GHz, -32 dBm, 1200 Mbps PHY
+IPERF3 UPLOAD: 613 Mbit/sec, 2.14 GB, 3 retransmits
+IPERF3 DOWNLOAD: 551 Mbit/sec, 1.92 GB

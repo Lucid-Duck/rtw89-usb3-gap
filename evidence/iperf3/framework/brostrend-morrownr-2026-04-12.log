@@ -1,0 +1,23 @@
+=== Brostrend AX1800 (0bda:b832) -- MORROWNR rtw89_8852bu_git driver ===
+Date: Sun Apr 12 2026
+Chipset: RTL8852BU
+
+USB ENUMERATION:
+  Path after switch-mode: 2-2:1.0 (moved from Bus 3 to Bus 2)
+  Speed: 5000 Mbps (USB 3.0 SuperSpeed) negotiated, sysfs reports 10000
+  Switch-mode SUCCESSFUL on 8852BU chipset
+
+WIFI LINK:
+  Signal: -30 dBm
+  rx bitrate: 1134.2 Mbit/s, tx bitrate: 1200.9 Mbit/s
+
+IPERF3 UPLOAD (30s): 620 Mbit/sec, 2.16 GB, 0 retransmits
+IPERF3 DOWNLOAD (30s): 452 Mbit/sec, 1.58 GB (variable 174-624)
+
+DELTA vs STOCK:
+  Upload: 217 -> 620 = 2.9x improvement
+  Download: 276 -> 452 = 1.6x improvement
+
+SIGNIFICANCE: Confirms the USB 2->3 bug and fix applies to RTL8852BU
+in addition to RTL8852AU. Not chip-specific, whole 8852 USB family
+affected and fixed by the same switch-mode code.

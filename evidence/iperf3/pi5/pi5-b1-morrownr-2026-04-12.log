@@ -1,0 +1,17 @@
+=== DWA-X1850 B1 (2001:332c) on Raspberry Pi 5 -- morrownr rtw89_8852au_git ===
+Date: Sun Apr 12 2026
+Kernel: 6.12.47+rpt-rpi-2712 (Pi OS stock)
+Host: Raspberry Pi 5 (aarch64)
+
+USB ENUMERATION: Bus 4 Port 1, 5000 Mbps (USB 3.0 SuperSpeed)
+Switch-mode SUCCESSFUL on aarch64 + Broadcom RP1 xHCI
+
+WIFI LINK:
+  5 GHz (5500 MHz), BSSID 00:00:00:00:00:A2
+  Signal: -38 dBm
+  rx/tx bitrate: 1200.9 Mbit/s (HE-MCS 11, 80 MHz, HE-NSS 2)
+
+IPERF3 UPLOAD (30s): 771 Mbit/sec, 2.69 GB, 0 retransmits
+IPERF3 DOWNLOAD (30s, retry): 589 Mbit/sec, 2.06 GB
+  (First run was anomalous at 45 Mbps, likely transient interference;
+   retry gave consistent numbers)

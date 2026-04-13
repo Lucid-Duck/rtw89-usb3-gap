@@ -1,0 +1,23 @@
+=== DWA-X1850 B1 (2001:332c) -- STOCK rtw89_8852au driver ===
+Date: Sun Apr 12 2026
+Kernel: 6.19.11-200.fc43.x86_64
+Host: Framework 13, Fedora 43
+Adapter position: j5Create powered hub
+
+Driver state: stock kernel rtw89_8852au + rtw89_usb + rtw89_core
+
+USB ENUMERATION:
+  Path: 3-3:1.0 (Bus 3 USB 2.0 root hub through powered hub)
+  Speed: 480 Mbps (USB 2.0 High-Speed)
+  Product string: "802.11ax WLAN Adapter" (note: B1 descriptor is more
+  accurate than A1 which still says 802.11ac)
+  NO switch-mode observed in dmesg
+
+WIFI LINK:
+  SSID: 8 Hertz WAN IP, 5 GHz (5500 MHz)
+  Signal: -32 dBm
+  rx bitrate: 1134.2 Mbit/s (HE-MCS 11, 80 MHz, HE-NSS 2)
+  tx bitrate: 1200.9 Mbit/s (HE-MCS 11, 80 MHz, HE-NSS 2)
+
+IPERF3 UPLOAD (30s): 257 Mbit/sec, 919 MB, 0 retransmits
+IPERF3 DOWNLOAD (30s): 244 Mbit/sec, 872 MB

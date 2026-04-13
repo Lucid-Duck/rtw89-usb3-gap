@@ -1,0 +1,26 @@
+=== DWA-X1850 B1 (2001:332c) -- MORROWNR rtw89_8852au_git driver ===
+Date: Sun Apr 12 2026
+Kernel: 6.19.11-200.fc43.x86_64
+Host: Framework 13, Fedora 43
+
+Driver state: morrownr rtw89_8852au_git + rtw89_usb_git + rtw89_core_git
+with switch_usb_mode=y
+Git commit: 2c2d99d18a660a9c1506844bb822a4edf900accf
+
+USB ENUMERATION:
+  Path after switch-mode: 2-2:1.0 (moved from Bus 3 to Bus 2)
+  Speed: 5000 Mbps (USB 3.0 SuperSpeed)
+  Switch-mode SUCCESSFUL
+
+WIFI LINK:
+  Signal: -32 dBm
+  rx bitrate: 1134.2 Mbit/s
+  tx bitrate: 1200.9 Mbit/s
+
+IPERF3 UPLOAD (30s): 803 Mbit/sec, 2.81 GB, 0 retransmits
+IPERF3 DOWNLOAD (30s): 400 Mbit/sec, 1.40 GB (variable 73-658 during test)
+
+DELTA vs STOCK:
+  Upload: 257 -> 803 = 3.1x improvement
+  Download: 244 -> 400 = 1.6x improvement
+  USB bus: 480 -> 5000 Mbps = 10x capacity
