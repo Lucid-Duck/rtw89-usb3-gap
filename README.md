@@ -29,12 +29,12 @@ rtw89-usb3-gap/
 ├── FINDINGS.md                   Full technical writeup
 ├── adapters/                     Per-adapter identity and behavioral notes
 ├── hosts/                        Per-host hardware and OS details
-├── evidence/
-│   ├── iperf3/                   iperf3 logs from today's full test matrix
-│   ├── dmesg/                    dmesg probe captures
-│   ├── sysfs/                    Per-plug USB state snapshots
-│   └── iw-link/                  Per-plug radio link snapshots
-└── source-analysis/              Reserved for mainline vs morrownr diff
+└── evidence/
+    ├── iperf3/                   iperf3 logs from the full test matrix
+    ├── dmesg/                    dmesg probe captures (framework-control + framework-morrownr-git)
+    ├── sysfs/                    Per-plug USB state snapshots
+    ├── iw-link/                  Per-plug radio link snapshots
+    └── crash-2026-04-11/         xHCI hard lockup crash evidence (1235 kernel lines, recovered from /var/log/messages)
 ```
 
 ## Credits
