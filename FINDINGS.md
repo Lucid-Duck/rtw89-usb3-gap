@@ -86,7 +86,7 @@ WiFi 7 (EHT-MCS 12) was successfully negotiated on the BE6500 on both platforms,
 
 ## Downstream vendor evidence
 
-Beyond the empirical test matrix above, a commercial Realtek USB Wi-Fi adapter vendor (BrosTrend) publishes their DKMS driver packages at `linux.brostrend.com`. The modprobe conf files shipped inside those packages document what the vendor ships to paying customers as the supported, production configuration. Both the installer script and the two `.deb` packages are publicly downloadable; no authentication or vendor contact is required to verify any of the following.
+Beyond the empirical test matrix above, a commercial Realtek USB Wi-Fi adapter vendor (BrosTrend) publishes their DKMS driver packages at `linux.brostrend.com`. The `.deb` packages bundle the out-of-tree 8852bu and 8852cu drivers maintained by Nick (`@morrownr`) with two vendor-specific modprobe conf tweaks applied on top. Both the installer script and the two `.deb` packages are publicly downloadable; no authentication or vendor contact is required to verify any of the following.
 
 ### Source artifacts
 
@@ -96,24 +96,23 @@ Beyond the empirical test matrix above, a commercial Realtek USB Wi-Fi adapter v
 
 SHA-256 captured 2026-04-22 for reproducibility, see `evidence/downstream-vendor/README.md` for the checksums and the extraction procedure.
 
-### What the vendor ships
+### Attribution
 
-Inside each `.deb`, at `/usr/src/rtl<chip>-<ver>/<chip>.conf`, is a modprobe conf that the installer symlinks into `/etc/modprobe.d/` at install time. Both `8852cu.conf` and `8852bu.conf` contain the same four directives at the top of the active-options block:
+The `8852cu.conf` and `8852bu.conf` templates inside each `.deb` originate in Nick's out-of-tree driver repos at `morrownr/rtl8852cu-20251113` and `morrownr/rtl8852bu-20250826` and are Nick's work. The blacklist directives and the conf layout are part of the OOT driver's own packaging hygiene: the in-kernel driver for each chip is blacklisted so the DKMS-built OOT module can load without conflict, which is standard OOT-driver practice and not a vendor statement about the in-kernel driver.
 
-```
-blacklist rtw89_8852cu          # or rtw89_8852bu
-blacklist rtw89_8852cu_git      # or rtw89_8852bu_git
-options 8852cu rtw_switch_usb_mode=1
-options usb-storage quirks=0bda:1a2b:i
-```
+BrosTrend's contribution to the shipped conf is a pair of `sed` tweaks applied during packaging, reflecting two commercial defaults they want on every customer install:
 
-Verbatim copies are preserved at `evidence/downstream-vendor/8852cu.conf` and `evidence/downstream-vendor/8852bu.conf`.
+1. **`options 8852cu rtw_switch_usb_mode=1` (and same for 8852bu), changed from the upstream default of `=0`.** Flips the USB 2-to-3 switch-mode parameter from off-by-default to on-by-default. This is the direct commercial signal: customers buy these adapters for USB 3.0 speeds, and BrosTrend ships the switch on by default rather than requiring every customer to edit the conf. The parameter only exists because the out-of-tree `morrownr/rtw89` commits `cd287cc` (AX chips) and `c8a8ac4` (BE chips) implement it; without those commits the default value is academic.
+2. **`options usb-storage quirks=0bda:1a2b:i`.** Not present in Nick's upstream conf at all; added by BrosTrend. Disables the Realtek Virtual CD-ROM (ZeroCD) mass-storage mode at VID:PID `0bda:1a2b`, which is the mode the raw silicon enumerates in on first plug before the firmware switches it to Wi-Fi mode. A first-plug customer-facing usability fix, separate from switch-mode but shipped alongside it.
+
+Verbatim copies of both shipped conf files (upstream template plus the two vendor tweaks) are preserved at `evidence/downstream-vendor/8852cu.conf` and `evidence/downstream-vendor/8852bu.conf`. See `evidence/downstream-vendor/README.md` for the exact line-level provenance.
 
 ### What this means
 
-1. **The vendor's production conf blacklists the in-kernel `rtw89_8852cu` and `rtw89_8852bu` drivers.** This is not a preference hint. It makes the in-kernel drivers unloadable for their customers on every install. The reason is on the first page of this document: at USB 2.0 High-Speed the in-kernel driver delivers roughly one third of the rated throughput the adapters are sold on (AX1800, AXE5400). The vendor cannot ship a usable product with that behavior, so they disable the in-kernel driver and install their own DKMS-built module that does issue the switch-mode write.
-2. **`rtw_switch_usb_mode=1` is the vendor default.** The out-of-tree driver from `morrownr/rtw89` exposes this as a module parameter. Commits `cd287cc` (AX chips) and `c8a8ac4` (BE chips) are what implement the actual register write that the parameter gates. BrosTrend's shipping conf turns the parameter on by default for every install; the comments in the conf file document the three possible values (`0` no switch, `1` USB 2 to USB 3, `2` USB 3 to USB 2) inline.
-3. **The ZeroCD `usb-storage quirks=0bda:1a2b:i` directive** disables the Realtek Virtual CD-ROM mass-storage mode at VID:PID `0bda:1a2b`, which is the mode the raw silicon enumerates in on first plug before the firmware switches it to Wi-Fi mode. This is a separate issue from switch-mode, but it appears in the same shipping conf and is another piece of out-of-the-box behavior that mainline does not handle cleanly today.
+The shipped conf is weak evidence for one claim and strong evidence for another.
+
+- **Weak / non-evidence:** the `blacklist rtw89_8852cu` / `rtw89_8852bu` lines are NOT a commercial statement about the in-kernel driver; they are Nick's OOT packaging template doing what every OOT driver conf does, avoiding a load conflict between the in-kernel and the out-of-tree module. Do not read these lines as "the vendor disables the in-kernel driver as a judgment call."
+- **Strong evidence:** a commercial vendor shipping adapters for USB 3.0 speeds has chosen, through their product-lifetime DKMS packaging pipeline, to default `rtw_switch_usb_mode=1` on every customer install. That default is only useful because the switch-mode implementation exists in the OOT driver. Their customer-facing posture is "we expect this parameter to be on, and the switch-mode code has to be present for it to do anything."
 
 ### Third-party reproduction on kernel 7.0
 
@@ -121,7 +120,7 @@ The same vendor has independently tested the in-kernel `rtw89_8852bu` and `rtw89
 
 ### Implication for upstream submission
 
-The switch-mode patches are not a speculative addition. They are the single mechanism that separates "hardware usable out of the box" from "modprobe conf actively blacklists the in-kernel driver because it is not usable." Shipping vendor artifacts document this directly. Upstream review reviewers can audit the exact artifacts cited above, verify the SHA-256, and confirm the claim without going through any private channel.
+A commercial vendor defaults the switch-mode parameter on because their customers pay for USB 3.0 throughput. The parameter is only useful where the underlying switch-mode code is present. In-kernel rtw89 today does not carry that code; morrownr/rtw89 does, and it is what the vendor's DKMS pipeline compiles against. Bringing the switch-mode commits (`cd287cc` + `c8a8ac4`) into mainline closes the gap end to end: the parameter becomes available upstream, vendor defaults carry meaning on an in-kernel install, and every downstream distribution inherits the capability without per-vendor packaging workarounds. Upstream reviewers can audit the exact artifacts cited above, verify the SHA-256, and confirm the vendor-default claim without going through any private channel.
 
 ## rtw88 precedent
 

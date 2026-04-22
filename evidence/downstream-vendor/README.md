@@ -2,8 +2,9 @@
 
 ## What is in this directory
 
-Verbatim copies of two `modprobe.d` configuration files shipped by BrosTrend
-for their Realtek RTL8852BU and RTL8852CU based Wi-Fi adapters:
+Verbatim copies of the two `modprobe.d` configuration files installed by
+BrosTrend's DKMS packages for their Realtek RTL8852BU and RTL8852CU based
+Wi-Fi adapters:
 
 - `8852bu.conf` -- extracted from `rtl8852bu-dkms.deb` package version `1.19.21`
 - `8852cu.conf` -- extracted from `rtl8852cu-dkms.deb` package version `1.19.22`
@@ -11,41 +12,73 @@ for their Realtek RTL8852BU and RTL8852CU based Wi-Fi adapters:
 Both files are installed by the vendor's DKMS package into
 `/etc/modprobe.d/` at install time.
 
+## Attribution
+
+These shipped conf files are NOT wholly authored by BrosTrend. They are
+Nick's (`@morrownr`) OOT driver conf templates with two vendor-specific
+`sed` tweaks applied during BrosTrend's DKMS packaging.
+
+### Upstream source of the conf templates
+
+The base templates live in Nick's out-of-tree driver source repos:
+
+- `https://github.com/morrownr/rtl8852bu-20250826` -- source of `8852bu.conf`
+- `https://github.com/morrownr/rtl8852cu-20251113` -- source of `8852cu.conf`
+
+Everything in the shipped `.conf` files that isn't one of the two lines
+called out below is Nick's work: the blacklist directives, the option
+templates, the extensive documentation comments, the hostapd-mode notes,
+and the list of exposed `/sys/module/<driver>/parameters/` entries.
+
+### Vendor tweaks applied by BrosTrend
+
+BrosTrend's contribution to the shipped conf is limited to two lines,
+applied via `sed` in their packaging pipeline:
+
+1. **`options 8852cu rtw_switch_usb_mode=1`** (same for `8852bu`).
+   The upstream template sets this to `=0` (switch off by default).
+   BrosTrend flips it to `=1` so every customer install gets the USB 2
+   to USB 3 switch by default. This is a commercial choice: customers
+   buy the adapters for USB 3.0 speeds and shouldn't need to edit a
+   modprobe file to get them.
+2. **`options usb-storage quirks=0bda:1a2b:i`.** Not present in the
+   upstream template at all. Added by BrosTrend. Disables the Realtek
+   Virtual CD-ROM (ZeroCD) mass-storage mode at VID:PID `0bda:1a2b`,
+   which is the mode the silicon enumerates in on first plug before
+   the firmware switches to Wi-Fi mode. Addresses a first-plug
+   customer-facing usability issue that is independent of switch-mode.
+
+### Diffing the shipped conf against Nick's upstream
+
+To verify the attribution yourself, compare the files in this directory
+against the conf templates in Nick's source repos:
+
+```sh
+curl -sSL https://raw.githubusercontent.com/morrownr/rtl8852cu-20251113/main/8852cu.conf -o /tmp/nick-8852cu.conf
+diff /tmp/nick-8852cu.conf evidence/downstream-vendor/8852cu.conf
+```
+
+The diff will show exactly the two vendor tweaks and nothing else of
+substance.
+
 ## Why this evidence matters
 
-The switch-mode patches this repository documents (Bitterblue Smith's
-`cd287cc` and `c8a8ac4` in `morrownr/rtw89`) are the exact mechanism
-that the BrosTrend production conf files rely on.
+Strong signal: a commercial vendor ships the USB 2-to-3 switch-mode
+parameter enabled by default on every customer install. That default
+is only meaningful because Bitterblue Smith's switch-mode commits in
+`morrownr/rtw89` (`cd287cc` for AX chips, `c8a8ac4` for BE chips)
+implement the register write that the parameter gates. Without those
+commits in the loaded module, the parameter is academic. BrosTrend's
+DKMS pipeline compiles against Nick's OOT rtw89 fork precisely because
+it carries that implementation.
 
-Both vendor-shipped confs contain, at the top of the active-options block:
-
-- `blacklist rtw89_8852cu` (or `rtw89_8852bu`)
-- `blacklist rtw89_8852cu_git` (or `rtw89_8852bu_git`)
-- `options 8852cu rtw_switch_usb_mode=1` (or `options 8852bu rtw_switch_usb_mode=1`)
-- `options usb-storage quirks=0bda:1a2b:i`
-
-In other words, the vendor of every BrosTrend Realtek Wi-Fi 6 USB adapter
-currently on the market ships a modprobe conf that:
-
-1. **Actively disables the in-kernel `rtw89_8852cu` / `rtw89_8852bu` drivers**
-   by blacklisting them. This is not "we prefer the out-of-tree driver"
-   phrasing. The shipping artifact makes the in-kernel driver unloadable
-   for their customers, because at USB 2 High-Speed it cannot deliver the
-   rated throughput the hardware is sold on (AX1800, AXE5400).
-
-2. **Sets `rtw_switch_usb_mode=1`** so the out-of-tree driver performs the
-   USB 2 to USB 3 switch at probe time. This is the vendor's production
-   setting. The comments in the conf files document the parameter values
-   inline.
-
-3. **Disables the Realtek Virtual CD-ROM / ZeroCD mass-storage mode** via
-   the standard `usb-storage` quirk for VID:PID `0bda:1a2b`, so the
-   adapter enumerates directly as a Wi-Fi device rather than a CDROM on
-   first plug.
-
-All three of these behaviors are absent or broken in mainline's in-kernel
-rtw89 driver today. The switch-mode patches in `morrownr/rtw89` are the
-upstream resolution path for the first two.
+Weak signal (do not over-read): the `blacklist rtw89_8852cu` and
+`blacklist rtw89_8852bu` directives in the shipped conf are NOT a
+vendor statement about the in-kernel driver. They are part of Nick's
+OOT driver packaging hygiene: the in-kernel driver must be unloaded
+for the DKMS-built OOT module to take over a matching device, and
+that is standard OOT-driver practice rather than a commercial
+judgment.
 
 ## Provenance
 
