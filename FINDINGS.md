@@ -84,6 +84,45 @@ Pi OS users have an additional stake: kernel 6.12 ships with no rtw89 USB module
 
 WiFi 7 (EHT-MCS 12) was successfully negotiated on the BE6500 on both platforms, demonstrating the current and future value of this fix for 802.11be hardware.
 
+## Downstream vendor evidence
+
+Beyond the empirical test matrix above, a commercial Realtek USB Wi-Fi adapter vendor (BrosTrend) publishes their DKMS driver packages at `linux.brostrend.com`. The modprobe conf files shipped inside those packages document what the vendor ships to paying customers as the supported, production configuration. Both the installer script and the two `.deb` packages are publicly downloadable; no authentication or vendor contact is required to verify any of the following.
+
+### Source artifacts
+
+- `https://linux.brostrend.com/install` -- POSIX shell installer (GPL-3.0-or-later)
+- `https://linux.brostrend.com/rtl8852cu-dkms.deb` -- package version `1.19.22`
+- `https://linux.brostrend.com/rtl8852bu-dkms.deb` -- package version `1.19.21`
+
+SHA-256 captured 2026-04-22 for reproducibility, see `evidence/downstream-vendor/README.md` for the checksums and the extraction procedure.
+
+### What the vendor ships
+
+Inside each `.deb`, at `/usr/src/rtl<chip>-<ver>/<chip>.conf`, is a modprobe conf that the installer symlinks into `/etc/modprobe.d/` at install time. Both `8852cu.conf` and `8852bu.conf` contain the same four directives at the top of the active-options block:
+
+```
+blacklist rtw89_8852cu          # or rtw89_8852bu
+blacklist rtw89_8852cu_git      # or rtw89_8852bu_git
+options 8852cu rtw_switch_usb_mode=1
+options usb-storage quirks=0bda:1a2b:i
+```
+
+Verbatim copies are preserved at `evidence/downstream-vendor/8852cu.conf` and `evidence/downstream-vendor/8852bu.conf`.
+
+### What this means
+
+1. **The vendor's production conf blacklists the in-kernel `rtw89_8852cu` and `rtw89_8852bu` drivers.** This is not a preference hint. It makes the in-kernel drivers unloadable for their customers on every install. The reason is on the first page of this document: at USB 2.0 High-Speed the in-kernel driver delivers roughly one third of the rated throughput the adapters are sold on (AX1800, AXE5400). The vendor cannot ship a usable product with that behavior, so they disable the in-kernel driver and install their own DKMS-built module that does issue the switch-mode write.
+2. **`rtw_switch_usb_mode=1` is the vendor default.** The out-of-tree driver from `morrownr/rtw89` exposes this as a module parameter. Commits `cd287cc` (AX chips) and `c8a8ac4` (BE chips) are what implement the actual register write that the parameter gates. BrosTrend's shipping conf turns the parameter on by default for every install; the comments in the conf file document the three possible values (`0` no switch, `1` USB 2 to USB 3, `2` USB 3 to USB 2) inline.
+3. **The ZeroCD `usb-storage quirks=0bda:1a2b:i` directive** disables the Realtek Virtual CD-ROM mass-storage mode at VID:PID `0bda:1a2b`, which is the mode the raw silicon enumerates in on first plug before the firmware switches it to Wi-Fi mode. This is a separate issue from switch-mode, but it appears in the same shipping conf and is another piece of out-of-the-box behavior that mainline does not handle cleanly today.
+
+### Third-party reproduction on kernel 7.0
+
+The same vendor has independently tested the in-kernel `rtw89_8852bu` and `rtw89_8852cu` on Kubuntu 26.04 daily with kernel 7.0 and confirmed the USB 2.0 ceiling described in this document (~300 Mbps on both chips). After enabling `rtw_switch_usb_mode=1` in the out-of-tree driver on the same test host, USB 3.0 mode was restored and 6 GHz connectivity worked on the 8852cu. This is an independent cross-check of the Framework-13 + Pi-5 matrix in this repository, on a third distro and a kernel release later than either of the two originally tested.
+
+### Implication for upstream submission
+
+The switch-mode patches are not a speculative addition. They are the single mechanism that separates "hardware usable out of the box" from "modprobe conf actively blacklists the in-kernel driver because it is not usable." Shipping vendor artifacts document this directly. Upstream review reviewers can audit the exact artifacts cited above, verify the SHA-256, and confirm the claim without going through any private channel.
+
 ## rtw88 precedent
 
 The same author (Bitterblue Smith) landed equivalent USB 2 to 3 switch code in mainline rtw88 across four commits from 2024-07-10 to 2025-04-02, reviewed and accepted by Ping-Ke Shih (Realtek, rtw88/rtw89 maintainer). The mechanism is identical; only the register addresses differ between the sister driver families. Upstream precedent for review approval exists.

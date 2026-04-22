@@ -34,7 +34,8 @@ rtw89-usb3-gap/
     ├── dmesg/                    dmesg probe captures (framework-control + framework-morrownr-git)
     ├── sysfs/                    Per-plug USB state snapshots
     ├── iw-link/                  Per-plug radio link snapshots
-    └── crash-2026-04-11/         xHCI hard lockup crash evidence (1235 kernel lines, recovered from /var/log/messages)
+    ├── crash-2026-04-11/         xHCI hard lockup crash evidence (1235 kernel lines, recovered from /var/log/messages)
+    └── downstream-vendor/        BrosTrend shipping modprobe confs (rtl8852bu-dkms 1.19.21 + rtl8852cu-dkms 1.19.22)
 ```
 
 ## Credits
