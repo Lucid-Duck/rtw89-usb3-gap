@@ -1,5 +1,5 @@
 Connected to 00:00:00:00:00:A1 (on wlp0s13f0u1u4u4)
-	SSID: 8 Hertz WAN IP
+	SSID: test-ssid
 	Link 2 BSSID 00:00:00:00:00:A3
 		freq: 2412.0
 	Link 1 BSSID 00:00:00:00:00:A2

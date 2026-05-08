@@ -15,7 +15,7 @@ USB ENUMERATION:
   re-enumerated on USB 3.0 SuperSpeed root hub
 
 WIFI LINK:
-  SSID: 8 Hertz WAN IP, 5 GHz (5500 MHz)
+  SSID: test-ssid, 5 GHz (5500 MHz)
   BSSID: 00:00:00:00:00:A2
   Signal: -32 dBm (basically identical to stock run)
   rx bitrate: 1134.2 Mbit/s (HE-MCS 11, 80 MHz, HE-NSS 2)

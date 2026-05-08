@@ -37,7 +37,7 @@ The slot under test for this campaign is the bottom-right USB-A module, which ro
 
 ## Test network
 
-- SSID: "8 Hertz WAN IP"
+- SSID: (redacted; consumer multi-band router)
 - 2.4 GHz BSSID: `00:00:00:00:00:A3` @ 2412 MHz
 - 5 GHz BSSID: `00:00:00:00:00:A2` @ 5500 MHz
 - 6 GHz BSSID: `00:00:00:00:00:A1` @ 5975 MHz

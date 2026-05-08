@@ -18,7 +18,7 @@ USB ENUMERATION:
   Switch-mode SUCCESSFUL on aarch64 + Broadcom RP1 xHCI
 
 WIFI LINK:
-  SSID: 8 Hertz WAN IP, 5 GHz (5500 MHz)
+  SSID: test-ssid, 5 GHz (5500 MHz)
   BSSID: 00:00:00:00:00:A2 (forced via nmcli)
   Signal: -36 dBm
   rx bitrate: 1134.2 Mbit/s, tx bitrate: 1200.9 Mbit/s (identical to Framework)

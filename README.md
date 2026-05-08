@@ -13,7 +13,7 @@ The fix already exists. It was written by Bitterblue Smith in `morrownr/rtw89` c
 | D-Link DWA-X1850 A1 | RTL8852AU | 258 Mbps | 802 Mbps | 3.1x |
 | D-Link DWA-X1850 B1 | RTL8852AU | 257 Mbps | 803 Mbps | 3.1x |
 | Brostrend AX1800 | RTL8852BU | 217 Mbps | 620 Mbps | 2.9x |
-| TP-Link BE6500 | RTL8922AU | 260 Mbps (*) | 957 Mbps | 3.7x |
+| BrosTrend BE6500 | RTL8922AU | 260 Mbps (*) | 957 Mbps | 3.7x |
 
 Tested on Framework 13 (Fedora 43, kernel 6.19.11, x86_64, Intel Tiger Lake xHCI) and Raspberry Pi 5 (Pi OS, kernel 6.12.47, aarch64, Broadcom RP1 xHCI). All four adapters also confirmed at USB 3.0 SuperSpeed on the Pi, with WiFi 7 (EHT-MCS 12) negotiated on the BE6500.
 

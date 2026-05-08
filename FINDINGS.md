@@ -4,7 +4,7 @@ A cross-platform empirical study demonstrating that mainline Linux's rtw89 USB d
 
 ## TL;DR
 
-Four Realtek USB WiFi adapters across three chipsets (RTL8852AU, RTL8852BU, RTL8922AU) and three manufacturers (D-Link, Brostrend, TP-Link) all enumerate at USB 2.0 (480 Mbps) on stock mainline rtw89. Real-world TCP throughput caps at 217 to 260 Mbps upload.
+Four Realtek USB WiFi adapters across three chipsets (RTL8852AU, RTL8852BU, RTL8922AU) and two manufacturers (D-Link, BrosTrend) all enumerate at USB 2.0 (480 Mbps) on stock mainline rtw89. Real-world TCP throughput caps at 217 to 260 Mbps upload.
 
 With Bitterblue Smith's switch-mode commits (`cd287cc` and `c8a8ac4`) applied via morrownr/rtw89, the same adapters re-enumerate at USB 3.0 SuperSpeed (5000 Mbps) and push 613 to 957 Mbps upload. The bug and fix reproduce on both x86_64 (Framework 13, Intel Tiger Lake xHCI) and aarch64 (Raspberry Pi 5, Broadcom RP1 xHCI).
 
@@ -41,8 +41,8 @@ With Bitterblue Smith's switch-mode commits (`cd287cc` and `c8a8ac4`) applied vi
 - morrownr/rtw89 HEAD: same
 
 ### Network
-- AP: 5 GHz (5500 MHz), SSID "8 Hertz WAN IP"
-- iperf3 server: Windows PC, 2.5 GbE wired, at 192.168.1.70
+- AP: 5 GHz (5500 MHz), consumer multi-band router (single SSID)
+- iperf3 server: 2.5 GbE wired Linux/Windows host
 - All tests: 30 seconds, default MTU, TCP, forced via `/32` route on the adapter under test
 
 ## Bug reproduction on stock kernel
@@ -84,43 +84,6 @@ Pi OS users have an additional stake: kernel 6.12 ships with no rtw89 USB module
 
 WiFi 7 (EHT-MCS 12) was successfully negotiated on the BE6500 on both platforms, demonstrating the current and future value of this fix for 802.11be hardware.
 
-## Downstream vendor evidence
-
-Beyond the empirical test matrix above, a commercial Realtek USB Wi-Fi adapter vendor (BrosTrend) publishes their DKMS driver packages at `linux.brostrend.com`. The `.deb` packages bundle the out-of-tree 8852bu and 8852cu drivers maintained by Nick (`@morrownr`) with two vendor-specific modprobe conf tweaks applied on top. Both the installer script and the two `.deb` packages are publicly downloadable; no authentication or vendor contact is required to verify any of the following.
-
-### Source artifacts
-
-- `https://linux.brostrend.com/install` -- POSIX shell installer (GPL-3.0-or-later)
-- `https://linux.brostrend.com/rtl8852cu-dkms.deb` -- package version `1.19.22`
-- `https://linux.brostrend.com/rtl8852bu-dkms.deb` -- package version `1.19.21`
-
-SHA-256 captured 2026-04-22 for reproducibility, see `evidence/downstream-vendor/README.md` for the checksums and the extraction procedure.
-
-### Attribution
-
-The `8852cu.conf` and `8852bu.conf` templates inside each `.deb` originate in Nick's out-of-tree driver repos at `morrownr/rtl8852cu-20251113` and `morrownr/rtl8852bu-20250826` and are Nick's work. The blacklist directives and the conf layout are part of the OOT driver's own packaging hygiene: the in-kernel driver for each chip is blacklisted so the DKMS-built OOT module can load without conflict, which is standard OOT-driver practice and not a vendor statement about the in-kernel driver.
-
-BrosTrend's contribution to the shipped conf is a pair of `sed` tweaks applied during packaging, reflecting two commercial defaults they want on every customer install:
-
-1. **`options 8852cu rtw_switch_usb_mode=1` (and same for 8852bu), changed from the upstream default of `=0`.** Flips the USB 2-to-3 switch-mode parameter from off-by-default to on-by-default. This is the direct commercial signal: customers buy these adapters for USB 3.0 speeds, and BrosTrend ships the switch on by default rather than requiring every customer to edit the conf. The parameter only exists because the out-of-tree `morrownr/rtw89` commits `cd287cc` (AX chips) and `c8a8ac4` (BE chips) implement it; without those commits the default value is academic.
-2. **`options usb-storage quirks=0bda:1a2b:i`.** Not present in Nick's upstream conf at all; added by BrosTrend. Disables the Realtek Virtual CD-ROM (ZeroCD) mass-storage mode at VID:PID `0bda:1a2b`, which is the mode the raw silicon enumerates in on first plug before the firmware switches it to Wi-Fi mode. A first-plug customer-facing usability fix, separate from switch-mode but shipped alongside it.
-
-Verbatim copies of both shipped conf files (upstream template plus the two vendor tweaks) are preserved at `evidence/downstream-vendor/8852cu.conf` and `evidence/downstream-vendor/8852bu.conf`. See `evidence/downstream-vendor/README.md` for the exact line-level provenance.
-
-### What this means
-
-The shipped conf is weak evidence for one claim and strong evidence for another.
-
-- **Weak / non-evidence:** the `blacklist rtw89_8852cu` / `rtw89_8852bu` lines are NOT a commercial statement about the in-kernel driver; they are Nick's OOT packaging template doing what every OOT driver conf does, avoiding a load conflict between the in-kernel and the out-of-tree module. Do not read these lines as "the vendor disables the in-kernel driver as a judgment call."
-- **Strong evidence:** a commercial vendor shipping adapters for USB 3.0 speeds has chosen, through their product-lifetime DKMS packaging pipeline, to default `rtw_switch_usb_mode=1` on every customer install. That default is only useful because the switch-mode implementation exists in the OOT driver. Their customer-facing posture is "we expect this parameter to be on, and the switch-mode code has to be present for it to do anything."
-
-### Third-party reproduction on kernel 7.0
-
-The same vendor has independently tested the in-kernel `rtw89_8852bu` and `rtw89_8852cu` on Kubuntu 26.04 daily with kernel 7.0 and confirmed the USB 2.0 ceiling described in this document (~300 Mbps on both chips). After enabling `rtw_switch_usb_mode=1` in the out-of-tree driver on the same test host, USB 3.0 mode was restored and 6 GHz connectivity worked on the 8852cu. This is an independent cross-check of the Framework-13 + Pi-5 matrix in this repository, on a third distro and a kernel release later than either of the two originally tested.
-
-### Implication for upstream submission
-
-A commercial vendor defaults the switch-mode parameter on because their customers pay for USB 3.0 throughput. The parameter is only useful where the underlying switch-mode code is present. In-kernel rtw89 today does not carry that code; morrownr/rtw89 does, and it is what the vendor's DKMS pipeline compiles against. Bringing the switch-mode commits (`cd287cc` + `c8a8ac4`) into mainline closes the gap end to end: the parameter becomes available upstream, vendor defaults carry meaning on an in-kernel install, and every downstream distribution inherits the capability without per-vendor packaging workarounds. Upstream reviewers can audit the exact artifacts cited above, verify the SHA-256, and confirm the vendor-default claim without going through any private channel.
 
 ## rtw88 precedent
 
@@ -135,3 +98,37 @@ Every stock mainline rtw89 USB WiFi adapter on every supported distro is silentl
 Raw iperf3 stdout, dmesg captures, sysfs snapshots, and `iw link` output are in `evidence/`.
 
 The no-switchmode source build used for Phase 2 can be reproduced by cloning morrownr/rtw89 at HEAD `2c2d99d`, creating a branch, and reverting commits `cd287cc` and `c8a8ac4`. One conflict in `reg.h` should be resolved to keep the `R_BE_SCOREBOARD` definition while dropping the switch-mode register bits.
+
+## Verification 2026-05-07: gated re-runs
+
+After the original 2026-04-11/12 captures, the throughput methodology
+was hardened with a per-iteration byte-counter cross-check (wireless
+tx/rx delta vs iperf3 reported bytes) to catch same-subnet wired-NIC
+bleed. The full AX-gen + BE-gen matrix was re-run on 2026-05-07
+against this gated runner. Wireless tx/rx delta on every cited cell
+landed at 103-108% of iperf3 reported bytes (excess is normal TCP/IP
+framing overhead), confirming no wired-NIC contamination.
+
+Six AX-generation adapters, FW13 host (Fedora 43, kernel 6.19.13),
+consumer multi-band router, P=8 mean Mbps:
+
+  Adapter (chip)              Band, width      UL stock  UL patched  DL stock  DL patched
+  --------------------------  ---------------  --------  ----------  --------  ----------
+  EDUP AXE5400 (RTL8852CU)    6 GHz, 160 MHz       269        1364       327         579
+  AX8L AXE5400 (RTL8852CU)    6 GHz, 160 MHz       269        1440       324         510
+  AX4L AX1800 (RTL8852BU)     5 GHz,  80 MHz       208         597       293         695
+  AX1L AX1800 (RTL8852BU)     5 GHz,  80 MHz       235         608       273         843
+  DWA-X1850 A1 (RTL8852AU)    5 GHz,  80 MHz       254         748       264         707
+  DWA-X1850 B1 (RTL8852AU)    5 GHz,  80 MHz       248         706       265         679
+
+BrosTrend BE6500 (RTL8922AU), patched: consumer-router MLO 3-link
+1430 UL / 995 DL Mbps P=8; controlled lab AP single-link 5 GHz
+160 MHz EHT 1335 UL / 1058 DL Mbps P=8; switch_usb_mode=N forces
+USB 2 at 255 UL / 311 DL Mbps (matching the AX-gen ceiling).
+
+Plug-cycle on FW13 + a second x86_64 host (kernel 6.17.9-arch1-1,
+morrownr/rtw89 fork): N=10 cycles per (chip, host) cell on
+DWA-X1850 A1, BrosTrend AX1L, and BrosTrend BE6500 -- 60 PASS / 60.
+
+These gated cells are the basis for the upstream submission's
+test-results section.

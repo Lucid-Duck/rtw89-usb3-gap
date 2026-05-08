@@ -1,7 +1,7 @@
 === iw dev wlp0s13f0u2i3 link, Alfa, 2026-04-11, Framework ===
 
 Connected to 00:00:00:00:00:A1 (on wlp0s13f0u2i3)
-	SSID: 8 Hertz WAN IP
+	SSID: test-ssid
 	freq: 5975.0
 	RX: 2572330357 bytes (1927332 packets)
 	TX: 2960428632 bytes (2351663 packets)

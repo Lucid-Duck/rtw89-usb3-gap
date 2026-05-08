@@ -40,7 +40,7 @@ WM Firmware:      ____010000, Build Time: 20251223091148
 | Field | Value |
 |---|---|
 | BSSID | `00:00:00:00:00:A1` |
-| SSID | "8 Hertz WAN IP" |
+| SSID | "test-ssid" |
 | Band | 6 GHz |
 | Frequency | 5975 MHz |
 | Channel width | 80 MHz |

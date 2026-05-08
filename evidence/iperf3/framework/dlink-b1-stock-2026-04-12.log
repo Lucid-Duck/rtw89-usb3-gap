@@ -14,7 +14,7 @@ USB ENUMERATION:
   NO switch-mode observed in dmesg
 
 WIFI LINK:
-  SSID: 8 Hertz WAN IP, 5 GHz (5500 MHz)
+  SSID: test-ssid, 5 GHz (5500 MHz)
   Signal: -32 dBm
   rx bitrate: 1134.2 Mbit/s (HE-MCS 11, 80 MHz, HE-NSS 2)
   tx bitrate: 1200.9 Mbit/s (HE-MCS 11, 80 MHz, HE-NSS 2)
