@@ -1,0 +1,33 @@
+Station a2:27:a8:63:20:80 (on wlp0s13f0u2)
+	authorized:	yes
+	authenticated:	yes
+	associated:	yes
+	preamble:	long
+	WMM/WME:	yes
+	MFP:		yes
+	TDLS peer:	no
+	inactive time:	3309 ms
+	rx bytes:	55284173278
+	rx packets:	11409635
+	tx bytes:	61493425228
+	tx packets:	22847190
+	tx retries:	0
+	tx failed:	0
+	beacon loss:	0
+		beacon rx:	13679
+	rx drop misc:	62
+	signal:  	-22 [-27, -19] dBm
+	signal avg:	-21 [-27, -19] dBm
+	beacon signal avg:	-21 dBm
+	tx bitrate:	1200.9 MBit/s 80MHz HE-MCS 11 HE-NSS 2 HE-GI 0 HE-DCM 0
+	tx duration:	0 us
+	rx bitrate:	960.7 MBit/s 80MHz HE-MCS 9 HE-NSS 2 HE-GI 0 HE-DCM 0
+	rx duration:	0 us
+	DTIM period:	1
+	beacon interval:100
+	short slot time:yes
+	connected time:	1413 seconds
+	associated at [boottime]:	48937.216s
+	associated at:	1778126421622 ms
+	current time:	1778127833840 ms
+

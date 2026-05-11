@@ -132,3 +132,19 @@ DWA-X1850 A1, BrosTrend AX1L, and BrosTrend BE6500 -- 60 PASS / 60.
 
 These gated cells are the basis for the upstream submission's
 test-results section.
+
+Per-cell raw evidence for the May 2026 captures (40 iperf3 JSON
+files per cell across TCP P=1 / P=8 in both directions, byte-counter
+deltas, pre/post link state, pre/post USB enumeration speeds, per-
+iteration timestamps) lives under `evidence/may-2026-laptop/`,
+split into `patched-consumer-router/` and `stock-bpi-lab-ap/`
+subdirectories. The stock cells were captured against the BPi-R4
+Pro single-band lab AP (SSID Dev-Lab-5) rather than the consumer
+router; the USB enumeration ceiling that the stock numbers reflect
+(480 Mbps High-Speed) is constant across APs because the bottleneck
+is the USB bus, not the radio.
+
+Per-adapter summaries for the six AX-generation devices are in
+`adapters/`: `dwa-x1850-a1.md`, `dwa-x1850-b1.md`,
+`brostrend-ax1l.md`, `brostrend-ax4l.md`, `brostrend-ax8l.md`,
+`edup-axe5400.md`.

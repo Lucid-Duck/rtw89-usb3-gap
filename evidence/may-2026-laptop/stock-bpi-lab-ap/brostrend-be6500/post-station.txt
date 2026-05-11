@@ -1,0 +1,31 @@
+Station 00:0c:43:26:60:20 (on wlp0s20f0u3)
+	authorized:	yes
+	authenticated:	yes
+	associated:	yes
+	preamble:	long
+	WMM/WME:	yes
+	MFP:		yes
+	TDLS peer:	no
+	inactive time:	4176 ms
+	rx bytes:	22729615919
+	rx packets:	4499779
+	tx bytes:	20504428530
+	tx packets:	3576597
+	tx retries:	0
+	tx failed:	0
+	beacon loss:	0
+	rx drop misc:	1302
+	signal:  	-32 [-30, -36] dBm
+	signal avg:	-31 [-30, -35] dBm
+	tx bitrate:	1921.5 MBit/s 160MHz EHT-MCS 9 EHT-NSS 2 EHT-GI 0
+	tx duration:	0 us
+	rx bitrate:	36.0 MBit/s 80MHz EHT-MCS 0 EHT-NSS 1 EHT-GI 0
+	rx duration:	0 us
+	DTIM period:	2
+	beacon interval:100
+	short slot time:yes
+	connected time:	1416 seconds
+	associated at [boottime]:	32706.632s
+	associated at:	1778110191038 ms
+	current time:	1778111605586 ms
+

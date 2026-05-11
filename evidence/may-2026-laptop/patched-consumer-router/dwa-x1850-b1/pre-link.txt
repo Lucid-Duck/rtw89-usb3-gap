@@ -1,0 +1,11 @@
+Connected to a2:27:a8:63:20:80 (on wlp0s13f0u2)
+	SSID: 8 Hertz WAN IP
+	freq: 5220.0
+	RX: 57283 bytes (244 packets)
+	TX: 17471 bytes (123 packets)
+	signal: -22 dBm
+	rx bitrate: 1200.9 MBit/s 80MHz HE-MCS 11 HE-NSS 2 HE-GI 0 HE-DCM 0
+	tx bitrate: 1200.9 MBit/s 80MHz HE-MCS 11 HE-NSS 2 HE-GI 0 HE-DCM 0
+	bss flags: short-slot-time
+	dtim period: 1
+	beacon int: 100

@@ -1,0 +1,11 @@
+Connected to 00:0c:43:26:60:20 (on wlp0s20f0u3)
+	SSID: Dev-Lab-5
+	freq: 5180.0
+	RX: 34551 bytes (197 packets)
+	TX: 8795 bytes (64 packets)
+	signal: -33 dBm
+	rx bitrate: 6.0 MBit/s
+	tx bitrate: 2882.3 MBit/s 160MHz EHT-MCS 13 EHT-NSS 2 EHT-GI 0
+	bss flags: short-slot-time
+	dtim period: 2
+	beacon int: 100
