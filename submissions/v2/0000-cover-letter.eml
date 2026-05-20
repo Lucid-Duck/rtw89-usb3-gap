@@ -1,0 +1,144 @@
+From: Devin Wittmayer <lucid_duck@justthetip.ca>
+To: linux-wireless@vger.kernel.org
+Cc: pkshih@realtek.com, rtl8821cerfe2@gmail.com, linux-kernel@vger.kernel.org, Devin Wittmayer <lucid_duck@justthetip.ca>
+In-Reply-To: <20260508054421.128938-1-lucid_duck@justthetip.ca>
+References: <20260508054421.128938-1-lucid_duck@justthetip.ca>
+Subject: [PATCH rtw-next v2 0/1] wifi: rtw89: usb: Support switching to USB 3 mode
+Date: Mon, 11 May 2026 09:08:10 -0700
+Message-ID: <20260511160811.17647-1-lucid_duck@justthetip.ca>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This patch adds USB 2 to USB 3 mode switching for the AX-generation
+chips in the rtw89 USB driver (8852AU, 8852BU, 8852CU and helper
+variants). Without it, those adapters enumerate at USB 2.0
+high-speed on first plug and stay there, capping real-world
+throughput around 260 Mbps TCP regardless of radio capability.
+
+It is Bitterblue Smith's morrownr/rtw89 commit cd287ccf544b
+(2025-07-16) rebased onto rtw-next without code changes:
+author's Signed-off-by preserved, my Signed-off-by added as
+relayer, Tested-by per chip based on the matrix below.
+
+Changes since v1
+================
+
+- Rebased onto pkshih/rtw rtw-next (HEAD c1ed02655f91) per
+  maintainer feedback. The patch diff is unchanged from v1; the
+  test matrix below carries forward.
+- Cover letter tightened to AX-generation scope only.
+
+The bug
+=======
+
+These chips present as USB 2 devices on first plug. The driver is
+expected to send a switch-mode register write to make them disappear
+and re-enumerate as USB 3 SuperSpeed. Mainline rtw89 does not issue
+these commands anywhere. Every user with one of these adapters on
+a mainline-derived distribution sits at the USB 2.0 ceiling for
+the life of the plug, regardless of negotiated radio rate.
+
+The fix
+=======
+
+The patch covers AX-generation chips (8852AU, 8852BU, 8852CU and
+helper variants) via R_AX_PAD_CTRL2. It also adds the
+switch_usb_mode module parameter (default on) for users who
+experience 2.4 GHz interference under USB 3.
+
+Mainline precedent
+==================
+
+The same mechanism is in mainline rtw88 across three commits
+between July 2024 and April 2025, all authored by Bitterblue Smith:
+
+  commit 315c23a64e99 ("wifi: rtw88: usb: Support USB 3 with RTL8822CU/RTL8822BU")
+  commit 82a35723a67c ("wifi: rtw88: usb: Support USB 3 with RTL8812AU")
+  commit bf1103654df9 ("wifi: rtw88: usb: Enable switching the RTL8814AU to USB 3")
+
+Test results
+============
+
+60 plug-cycles + 30+ gated throughput cells captured 2026-04-11
+to 2026-05-07. Both x86_64 (Tiger Lake xHCI) and aarch64
+(Broadcom RP1 xHCI) reproductions confirm the bug and the fix.
+
+  Hosts:    Framework 13 (x86_64, Fedora 43 / 6.19.13, Tiger Lake xHCI)
+            NucBox K8 Plus (x86_64, Arch Linux / 6.17.9, AMD F19h USB)
+            Raspberry Pi 5 (aarch64, Pi OS / 6.12.47, BCM2712 + RP1)
+            Banana Pi BPi-R4 Pro (aarch64, OpenWrt / 6.6.93, MT7988A;
+                                  also used as a controlled lab AP)
+  Adapters: D-Link DWA-X1850 A1 / B1 (RTL8852AU)
+            BrosTrend AX1L compact / AX4L high-gain (RTL8852BU)
+            BrosTrend AX8L AXE5400 / EDUP AXE5400 (RTL8852CU)
+  APs:      consumer multi-band router (WPA3-SAE / WPA2-PSK)
+            BPi-R4 Pro single-band lab AP (WPA3-SAE)
+  Server:   Linux iperf3 host on 2.5 GbE wired Ethernet
+
+Full per-cell evidence (raw iperf3 stdout, dmesg captures, sysfs
+snapshots, iw link snapshots, byte-counter deltas, per-host detail)
+at https://github.com/Lucid-Duck/rtw89-usb3-gap.
+
+Plug-cycle. N=10 cycles per (chip, host) cell. Pass = post-plug
+/sys/bus/usb/devices/<id>/speed reads 5000 (USB 3 SuperSpeed),
+zero WARN/BUG/Oops in cycle-bracketed dmesg, non-empty association
+BSSID after settle.
+
+  Adapter (chip)               FW13 6.19      K8 Plus 6.17
+  ---------------------------  -------------  --------------
+  DWA-X1850 A1 (RTL8852AU)     10/10 PASS     10/10 PASS
+  BrosTrend AX1L (RTL8852BU)   10/10 PASS     10/10 PASS
+
+  FW13:    Fedora 43, 6.19.13, wireless-next + this patch
+  K8 Plus: Arch Linux, 6.17.9-arch1-1, morrownr/rtw89 (upstream
+           fork; identical AX-gen behavior to this patch)
+
+Throughput. TCP iperf3, N=10 30-second iterations per sub-cell,
+four sub-cells per cell (P=8 and P=1, each direction), to a Linux
+2.5 GbE host. Per-cell /32 host route forces traffic onto the WiFi
+adapter; per-iteration byte-counter cross-check on every cited cell
+shows wireless tx/rx delta at 103-108% of iperf3 reported bytes
+(excess is normal TCP/IP framing), so wired-NIC bleed is ruled out.
+Linux tuning applied (rmem 32 MB, RPS=ff on the WiFi RX queue).
+
+FW13 stock (in-kernel rtw89, USB 2 stuck) vs patched (USB 3
+SuperSpeed), same adapter / AP / kernel / capture script, P=8 mean
+Mbps, AP is the consumer multi-band router:
+
+  Adapter (chip)              Band, width      UL stock  UL patched  DL stock  DL patched
+  --------------------------  ---------------  --------  ----------  --------  ----------
+  EDUP AXE5400 (RTL8852CU)    6 GHz, 160 MHz       269        1364       327         579
+  AX8L AXE5400 (RTL8852CU)    6 GHz, 160 MHz       269        1440       324         510
+  AX4L AX1800 (RTL8852BU)     5 GHz,  80 MHz       208         597       293         695
+  AX1L AX1800 (RTL8852BU)     5 GHz,  80 MHz       235         608       273         843
+  DWA-X1850 A1 (RTL8852AU)    5 GHz,  80 MHz       254         748       264         707
+  DWA-X1850 B1 (RTL8852AU)    5 GHz,  80 MHz       248         706       265         679
+
+USB enumeration verified at SuperSpeed (5000 Mbps) on every
+patched cell, both pre and post.
+
+K8 Plus second-rig spot check, kernel 6.17.9-arch1-1, consumer
+multi-band router, single-link 5 GHz 80 MHz, TCP P=1, N=10:
+
+  DWA-X1850 A1 (RTL8852AU)    788 UL / 693 DL Mbps (sigma 16 / 54)
+
+For comparison, every stock cell above caps at 208-327 Mbps, the
+USB 2.0 ceiling.
+
+Submission notes
+================
+
+Applies cleanly on pkshih/rtw rtw-next HEAD c1ed02655f91.
+checkpatch.pl --strict: zero errors, zero warnings, zero checks.
+
+Bitterblue Smith (1):
+  wifi: rtw89: usb: Support switching to USB 3 mode
+
+ drivers/net/wireless/realtek/rtw89/reg.h |  4 +++
+ drivers/net/wireless/realtek/rtw89/usb.c | 41 ++++++++++++++++++++++++
+ 2 files changed, 45 insertions(+)
+
+--
+2.53.0
+

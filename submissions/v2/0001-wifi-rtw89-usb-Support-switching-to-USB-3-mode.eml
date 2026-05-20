@@ -1,0 +1,121 @@
+From: Devin Wittmayer <lucid_duck@justthetip.ca>
+To: linux-wireless@vger.kernel.org
+Cc: pkshih@realtek.com, rtl8821cerfe2@gmail.com, linux-kernel@vger.kernel.org, Devin Wittmayer <lucid_duck@justthetip.ca>
+In-Reply-To: <20260511160811.17647-1-lucid_duck@justthetip.ca>
+References: <20260511160811.17647-1-lucid_duck@justthetip.ca>
+Subject: [PATCH rtw-next v2 1/1] wifi: rtw89: usb: Support switching to USB 3 mode
+Date: Mon, 11 May 2026 09:08:11 -0700
+Message-ID: <20260511160811.17647-2-lucid_duck@justthetip.ca>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The Realtek wifi 6/7 devices which support USB 3 are weird: when first
+plugged in, they pretend to be USB 2. The driver needs to send some
+commands to the device, which make it disappear and come back as a
+USB 3 device.
+
+Implement the required commands in rtw89.
+
+When a USB 3 device is plugged into a USB 2 port, rtw89 will try to
+switch it to USB 3 mode only once. The device will disappear and come
+back still in USB 2 mode, of course.
+
+Some people experience heavy interference in the 2.4 GHz band in
+USB 3 mode, so add a module parameter switch_usb_mode with the
+default value 1 to let people disable the switching.
+
+Tested with RTL8832BU and RTL8832CU.
+
+Signed-off-by: Bitterblue Smith <rtl8821cerfe2@gmail.com>
+Signed-off-by: Devin Wittmayer <lucid_duck@justthetip.ca>
+Tested-by: Devin Wittmayer <lucid_duck@justthetip.ca>
+---
+ drivers/net/wireless/realtek/rtw89/reg.h |  4 +++
+ drivers/net/wireless/realtek/rtw89/usb.c | 41 ++++++++++++++++++++++++
+ 2 files changed, 45 insertions(+)
+
+diff --git a/drivers/net/wireless/realtek/rtw89/reg.h b/drivers/net/wireless/realtek/rtw89/reg.h
+index 42ffe83931a3..7d4c085d9fb2 100644
+--- a/drivers/net/wireless/realtek/rtw89/reg.h
++++ b/drivers/net/wireless/realtek/rtw89/reg.h
+@@ -164,6 +164,10 @@
+ #define R_AX_DBG_PORT_SEL 0x00C0
+ #define B_AX_DEBUG_ST_MASK GENMASK(31, 0)
+ 
++#define R_AX_PAD_CTRL2 0x00C4
++#define U2SWITCHU3 0xB
++#define USB_SWITCH_DELAY 0xF
++
+ #define R_AX_PMC_DBG_CTRL2 0x00CC
+ #define B_AX_SYSON_DIS_PMCR_AX_WRMSK BIT(2)
+ 
+diff --git a/drivers/net/wireless/realtek/rtw89/usb.c b/drivers/net/wireless/realtek/rtw89/usb.c
+index 767a95f759b1..4fb25791d118 100644
+--- a/drivers/net/wireless/realtek/rtw89/usb.c
++++ b/drivers/net/wireless/realtek/rtw89/usb.c
+@@ -9,6 +9,11 @@
+ #include "txrx.h"
+ #include "usb.h"
+ 
++static bool rtw89_switch_usb_mode = true;
++module_param_named(switch_usb_mode, rtw89_switch_usb_mode, bool, 0644);
++MODULE_PARM_DESC(switch_usb_mode,
++		 "Set to N to disable switching to USB 3 mode to avoid potential interference in the 2.4 GHz band (default: Y)");
++
+ static void rtw89_usb_read_port_complete(struct urb *urb);
+ 
+ static void rtw89_usb_vendorreq(struct rtw89_dev *rtwdev, u32 addr,
+@@ -1027,6 +1032,35 @@ static void rtw89_usb_intf_deinit(struct rtw89_dev *rtwdev,
+ 	usb_set_intfdata(intf, NULL);
+ }
+ 
++static int rtw89_usb_switch_mode(struct rtw89_dev *rtwdev)
++{
++	struct rtw89_usb *rtwusb = rtw89_usb_priv(rtwdev);
++
++	if (!rtw89_switch_usb_mode)
++		return 0;
++
++	/* No known USB 3 devices with this chip. */
++	if (rtwdev->chip->chip_id == RTL8851B)
++		return 0;
++
++	if (rtwusb->udev->speed == USB_SPEED_SUPER)
++		return 0;
++
++	rtw89_debug(rtwdev, RTW89_DBG_HCI, "%s: pad_ctrl2: %#x %#x\n",
++		    __func__,
++		    rtw89_read8(rtwdev, R_AX_PAD_CTRL2 + 1),
++		    rtw89_read8(rtwdev, R_AX_PAD_CTRL2 + 2));
++
++	/* Already tried to switch but it's a USB 2 port. */
++	if (rtw89_read8(rtwdev, R_AX_PAD_CTRL2 + 1) == USB_SWITCH_DELAY)
++		return 0;
++
++	rtw89_write8(rtwdev, R_AX_PAD_CTRL2 + 1, USB_SWITCH_DELAY);
++	rtw89_write8(rtwdev, R_AX_PAD_CTRL2 + 2, U2SWITCHU3);
++
++	return 1;
++}
++
+ int rtw89_usb_probe(struct usb_interface *intf,
+ 		    const struct usb_device_id *id)
+ {
+@@ -1059,6 +1093,13 @@ int rtw89_usb_probe(struct usb_interface *intf,
+ 		goto err_free_hw;
+ 	}
+ 
++	ret = rtw89_usb_switch_mode(rtwdev);
++	if (ret) {
++		/* Not a fail, but we do need to skip rtw89_core_register. */
++		ret = 0;
++		goto err_intf_deinit;
++	}
++
+ 	if (rtwusb->udev->speed == USB_SPEED_SUPER)
+ 		rtwdev->hci.dle_type = RTW89_HCI_DLE_TYPE_USB3;
+ 	else
+-- 
+2.53.0
+

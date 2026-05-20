@@ -1,0 +1,40 @@
+From: Devin Wittmayer <lucid_duck@justthetip.ca>
+To: johannes@sipsolutions.net, linux-wireless@vger.kernel.org
+Cc: pkshih@realtek.com, rtl8821cerfe2@gmail.com, linux-kernel@vger.kernel.org, Devin Wittmayer <lucid_duck@justthetip.ca>
+In-Reply-To: <6d553cffcb0ae84e141006ae1430f6f37909ad2b.camel@sipsolutions.net>
+References: <6d553cffcb0ae84e141006ae1430f6f37909ad2b.camel@sipsolutions.net>
+Subject: Re: [PATCH rtw-next v2 1/1] wifi: rtw89: usb: Support switching to USB 3 mode
+Date: Mon, 11 May 2026 11:03:51 -0700
+Message-ID: <20260511180351.26471-1-lucid_duck@justthetip.ca>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+On Mon, 2026-05-11 at 19:26 +0200, Johannes Berg wrote:
+> > +static bool rtw89_switch_usb_mode = true;
+> > +module_param_named(switch_usb_mode, rtw89_switch_usb_mode, bool, 0644);
+> > +MODULE_PARM_DESC(switch_usb_mode,
+> > +         "Set to N to disable switching to USB 3 mode to avoid potential interference in the 2.4 GHz band (default: Y)");
+>
+> We shouldn't really add new module parameters.
+
+This module parameter follows the pattern Bitterblue established for
+rtw88: same user-facing name (switch_usb_mode), same description, same
+default. Commit 315c23a64e99 "wifi: rtw88: usb: Support USB 3 with
+RTL8822CU/RTL8822BU" (2024-07-10) added it to rtw88/usb.c and it
+remains in-tree.
+
+Three v3 paths I see:
+
+1. Drop the param. Users hitting USB3 2.4 GHz harmonic interference
+   would need to use a USB 2 port instead.
+2. Move the escape hatch behind a sysfs or nl80211 control. New UABI
+   surface; open to design suggestions on that.
+3. Keep it for rtw89/rtw88 symmetry on the same USB3 / 2.4 GHz
+   harmonic interference issue.
+
+Any of the three works on my side. If the rtw88 param is grandfathered
+and we should not add new module parameters even in this case, I will
+respin without it in v3.
+
+Devin

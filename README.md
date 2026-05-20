@@ -29,14 +29,21 @@ rtw89-usb3-gap/
 ├── FINDINGS.md                   Full technical writeup
 ├── adapters/                     Per-adapter identity and behavioral notes
 ├── hosts/                        Per-host hardware and OS details
+├── submissions/                  Mirror of the linux-wireless mailing list submissions and reviewer reply threads
+│   └── v2/                       v2 cover letter + patch + replies (Johannes, Bitterblue x2, Ping-Ke)
 └── evidence/
     ├── iperf3/                   iperf3 logs from the full test matrix
     ├── dmesg/                    dmesg probe captures (framework-control + framework-morrownr-git)
     ├── sysfs/                    Per-plug USB state snapshots
     ├── iw-link/                  Per-plug radio link snapshots
     ├── crash-2026-04-11/         xHCI hard lockup crash evidence (1235 kernel lines, recovered from /var/log/messages)
+    ├── may-2026-laptop/          May 2026 expanded matrix (per-cell iperf3 JSONs + byte-counter deltas + pre/post link/USB state + per-iteration timestamps)
     └── downstream-vendor/        BrosTrend shipping modprobe confs (morrownr OOT templates + two BrosTrend sed tweaks, rtl8852bu-dkms 1.19.21 + rtl8852cu-dkms 1.19.22)
 ```
+
+## Upstream submission status
+
+v2 of the rtw89 USB-3 switch-mode patch was sent to linux-wireless on 2026-05-11 by Devin Wittmayer carrying Bitterblue Smith's original code (morrownr/rtw89 commit cd287ccf544b, 2025-07-16) rebased onto pkshih/rtw rtw-next. See [submissions/v2/](submissions/v2/) for the cover letter, patch, and reviewer reply thread (Johannes Berg on module parameter, Bitterblue Smith on testing verification + DACK crash unrelatedness, Ping-Ke Shih on positive chip list for v3). Lore thread: https://lore.kernel.org/linux-wireless/20260511160811.17647-1-lucid_duck@justthetip.ca/T/#t
 
 ## Credits
 

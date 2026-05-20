@@ -1,0 +1,40 @@
+From: Devin Wittmayer <lucid_duck@justthetip.ca>
+To: pkshih@realtek.com, linux-wireless@vger.kernel.org
+Cc: rtl8821cerfe2@gmail.com, johannes@sipsolutions.net, linux-kernel@vger.kernel.org, Devin Wittmayer <lucid_duck@justthetip.ca>
+In-Reply-To: <e3ae58133549411e9eeb88c7c6ffbfaa@realtek.com>
+References: <e3ae58133549411e9eeb88c7c6ffbfaa@realtek.com>
+Subject: Re: [PATCH rtw-next v2 1/1] wifi: rtw89: usb: Support switching to USB 3 mode
+Date: Mon, 11 May 2026 19:54:44 -0700
+Message-ID: <20260512025444.49247-1-lucid_duck@justthetip.ca>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+On Tue, 2026-05-12 at 01:35 +0000, Ping-Ke Shih wrote:
+> As commit message, only RTL8832BU and RTL8832CU were tested, and WiFi 7
+> was not neither. I'd give positive list instead.
+
+Agreed. Tested chip set for this patch:
+
+Bitterblue's bench (per the commit body):
+  RTL8852B: RTL8832BU
+  RTL8852C: RTL8832CU
+
+My side (per the v2 cover letter matrix):
+  RTL8852A: D-Link DWA-X1850 A1 (8852AU)
+  RTL8852A: D-Link DWA-X1850 B1 (8852AU)
+  RTL8852B: BrosTrend AX1L (8832BU)
+  RTL8852B: BrosTrend AX4L (8832BU)
+  RTL8852C: BrosTrend AX8L (8832CU)
+  RTL8852C: EDUP AXE5400 (8832CU)
+
+v3 will gate on RTL8852A / RTL8852B / RTL8852C. RTL8851B stays out
+because no RTL8851B variant has USB 3 hardware (per the in-patch
+comment), so there is nothing to switch to.
+
+WiFi 7 in rtw89 appears to be exclusively BE-generation as far as
+I am aware (RTL8922A, RTL8922D). v2's AX-gen code (R_AX_PAD_CTRL2
+writes) would not execute for BE-gen chips, so no WiFi 7 chip
+appears testable for this patch by construction.
+
+Devin

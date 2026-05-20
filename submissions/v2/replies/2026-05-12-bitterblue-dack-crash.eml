@@ -1,0 +1,23 @@
+From: Devin Wittmayer <lucid_duck@justthetip.ca>
+To: rtl8821cerfe2@gmail.com, linux-wireless@vger.kernel.org
+Cc: pkshih@realtek.com, johannes@sipsolutions.net, linux-kernel@vger.kernel.org, Devin Wittmayer <lucid_duck@justthetip.ca>
+In-Reply-To: <2bc415d6-f0ae-42ab-8ffa-19cfb1df5954@gmail.com>
+References: <2bc415d6-f0ae-42ab-8ffa-19cfb1df5954@gmail.com>
+Subject: Re: [PATCH rtw-next v2 1/1] wifi: rtw89: usb: Support switching to USB 3 mode
+Date: Mon, 11 May 2026 17:35:59 -0700
+Message-ID: <20260512003559.44110-1-lucid_duck@justthetip.ca>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+On Tue, 2026-05-12 at 01:27 +0300, Bitterblue Smith wrote:
+> Good, good. So how did you avoid the crash?
+
+If you mean the crash at
+https://github.com/Lucid-Duck/rtw89-usb3-gap/tree/main/evidence/crash-2026-04-11
+-- that was BE-gen DACK calibration and is unrelated to this
+USB 2-to-3 switch-mode patch. Four AX-gen adapters concurrent on
+one xHCI host complete switch-mode and RF calibration without
+DACK errors.
+
+Devin

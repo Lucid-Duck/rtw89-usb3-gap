@@ -1,0 +1,41 @@
+From: Devin Wittmayer <lucid_duck@justthetip.ca>
+To: rtl8821cerfe2@gmail.com, linux-wireless@vger.kernel.org
+Cc: pkshih@realtek.com, johannes@sipsolutions.net, linux-kernel@vger.kernel.org, Devin Wittmayer <lucid_duck@justthetip.ca>
+In-Reply-To: <639b2f23-bff3-400f-b5ef-e7d0c39196bc@gmail.com>
+References: <639b2f23-bff3-400f-b5ef-e7d0c39196bc@gmail.com>
+Subject: Re: [PATCH rtw-next v2 1/1] wifi: rtw89: usb: Support switching to USB 3 mode
+Date: Mon, 11 May 2026 13:03:51 -0700
+Message-ID: <20260511200339.33682-1-lucid_duck@justthetip.ca>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+On Mon, 2026-05-11 at 21:14 +0300, Bitterblue Smith wrote:
+> Are you quite sure you tested this?
+
+Yes. Full test matrix is in the v2 cover letter (PATCH 0/1) of
+this series:
+
+- DWA-X1850 A1 / B1 (RTL8852AU)
+- BrosTrend AX1L / AX4L (RTL8852BU)
+- BrosTrend AX8L / EDUP AXE5400 (RTL8852CU)
+
+Six adapters, x86_64 Tiger Lake xHCI + aarch64 BCM2712 / RP1 hosts.
+60 plug-cycles + 30+ throughput cells captured 2026-04-11 to
+2026-05-07. USB enumeration verified at SuperSpeed (5000 Mbps) on
+every patched cell.
+
+Per-cell raw evidence for the May 2026 expanded matrix (40 iperf3
+JSON files per cell, byte-counter deltas, pre/post link state,
+pre/post USB enumeration speeds, per-iteration timestamps) at:
+
+https://github.com/Lucid-Duck/rtw89-usb3-gap/tree/main/evidence/may-2026-laptop
+
+Per-adapter summaries:
+
+https://github.com/Lucid-Duck/rtw89-usb3-gap/tree/main/adapters
+
+If the Tested-by trailer should be annotated with the specific chip
+list, I will add that when, and if, a v3 is needed.
+
+Devin
