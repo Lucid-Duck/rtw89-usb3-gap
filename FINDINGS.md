@@ -1,5 +1,11 @@
 # Findings: rtw89 USB 2.0 to 3.0 Switch-Mode
 
+> **Update 2026-08-05: this landed upstream.** `rtw89_usb_switch_mode()` is in mainline as of
+> `8368970b6240` (2026-05-27) and ships in 7.2. Checked against the tree: `v7.1` has no
+> occurrences of the symbol in `rtw89/usb.c`, `v7.2-rc6` has six. Everything below was measured
+> before that and still describes 7.1 and earlier, which is what the shipping distros are on
+> today. The gap is closed going forward.
+
 A cross-platform empirical study demonstrating that mainline Linux's rtw89 USB driver enumerates Realtek WiFi adapters at USB 2.0 High-Speed, and that Bitterblue Smith's switch-mode patches in morrownr/rtw89 restore USB 3.0 SuperSpeed operation.
 
 ## TL;DR

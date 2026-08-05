@@ -1,5 +1,11 @@
 # rtw89 USB 2 to USB 3 Switch-Mode Gap
 
+> **Update 2026-08-05: this landed upstream.** `rtw89_usb_switch_mode()` is in mainline as of
+> `8368970b6240` (2026-05-27) and ships in 7.2. Checked against the tree: `v7.1` has no
+> occurrences of the symbol in `rtw89/usb.c`, `v7.2-rc6` has six. Everything below was measured
+> before that and still describes 7.1 and earlier, which is what the shipping distros are on
+> today. The gap is closed going forward.
+
 Empirical proof that mainline `drivers/net/wireless/realtek/rtw89/usb.c` is missing a USB 2 to USB 3 switch-mode code path that already exists in the `morrownr/rtw89` out-of-tree fork and in the sister `rtw88` driver upstream.
 
 Without the switch-mode code, every Realtek RTL8832AU / RTL8852AU / RTL8832BU / RTL8852BU / RTL8832CU / RTL8852CU / RTL8912AU / RTL8922AU USB adapter enumerates at USB 2.0 high-speed on first plug and stays there for the life of the plug, capping real-world TCP throughput at roughly 260 Mbps regardless of the radio's actual capability.
